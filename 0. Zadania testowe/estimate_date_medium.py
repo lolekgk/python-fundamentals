@@ -1,5 +1,5 @@
 import math
-from datetime import date, datetime, timedelta
+from datetime import date, timedelta
 
 WORK_DAY_HOURS = 8
 
