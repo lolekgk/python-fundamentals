@@ -12,14 +12,15 @@ def shrunk_url(url):
 
 
 def domain_of_url(url):
-    netloc = urlparse(url).netloc.split('.')
-    return '.'.join(netloc[1:])
+    # netloc = urlparse(url).netloc.split('.')
+    # return '.'.join(netloc[1:])
+    return urlparse(url).hostname
 
 
 def url_list(url):
     url_components = [i for i in url.replace('.', '/').split('/') if i]
     url_components[0] += '//'
-    return url_components
+    return url_components  # can also use urlsplit, but return will be different (not the same as required)
 
 
 print(shrunk_url("http://example.com"))
