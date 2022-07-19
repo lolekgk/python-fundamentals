@@ -1,7 +1,4 @@
-import math
 import random
-import statistics
-from pprint import pprint
 
 data = [random.randint(0, 100000) for x in range(100)]
 
@@ -24,9 +21,3 @@ def normalize_data(data):
         / (max(data) - min(data))
         for num in data
     ]
-
-
-# pprint(random_number(data))
-# pprint(normalize_data(data))
-print(statistics.mean(normalize_data(data)))
-print(statistics.mean(random_number(data)))
