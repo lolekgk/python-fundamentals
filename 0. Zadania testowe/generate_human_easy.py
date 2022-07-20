@@ -14,8 +14,7 @@ def generate_country():
 
 
 def generate_phone_number():
-    random_digits = random.choices(string.digits, k=9)
-    return int(''.join(random_digits))
+    return int(''.join(random.choices(string.digits, k=9)))
 
 
 def generate_human():
