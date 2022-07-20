@@ -4,7 +4,7 @@ from collections import namedtuple
 def find_item(list_of_items, key):
     FoundItem = namedtuple('Result', ['value', 'index'])
     for i, item in enumerate(list_of_items):
-        if key in item:
+        if str(key) in str(item):
             return FoundItem(item, i)
     return ()
 
