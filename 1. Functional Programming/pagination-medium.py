@@ -11,9 +11,3 @@ def is_valid_page(page_number):
     elif page_number < 1:
         raise ValueError('Page number must be positive.')
     return True
-
-
-print(paginate(list(range(101)), 10, 11))
-
-# We can also use zip_longest from itertools, but it'll fill rest of page with fillvalue
-# Or more-itertools library -> chunked method
