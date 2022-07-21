@@ -1,10 +1,8 @@
 def paginate(items, max_elements, page_number):
     if is_valid_page(page_number):
-        paginated_items = [
-            items[i : i + max_elements]
-            for i in range(0, len(items), max_elements)
-        ]
-        return paginated_items[page_number - 1]  # lists start indexing from 0
+        page_start = (page_number - 1) * max_elements
+        page_end = page_start + max_elements
+        return items[page_start:page_end]
 
 
 def is_valid_page(page_number):
@@ -15,7 +13,7 @@ def is_valid_page(page_number):
     return True
 
 
-print(paginate(list(range(101)), 10, 1))
+print(paginate(list(range(101)), 10, 11))
 
 # We can also use zip_longest from itertools, but it'll fill rest of page with fillvalue
 # Or more-itertools library -> chunked method
