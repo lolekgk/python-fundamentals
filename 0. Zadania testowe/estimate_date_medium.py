@@ -5,21 +5,23 @@ import holidays
 
 
 def estimate_date(start_date, estimated_hours):
-    work_days = math.floor(estimated_hours / 8)
-    holidays_list = holidays.PL(years=start_date.year).keys()
+    work_days = math.ceil(estimated_hours / 8)
+    holidays_data = holidays.PL(years=start_date.year).keys()
+    days_to_add = work_days
     current_date = start_date
-    while work_days:
+
+    while days_to_add:
         weekday = current_date.isoweekday()
-        if current_date.year != start_date.year:
-            holidays_list = holidays.PL(years=current_date.year).keys()
-        if weekday > 5 or current_date in holidays_list:
-            current_date += timedelta(days=1)
-            continue
         current_date += timedelta(days=1)
-        work_days -= 1
-    return current_date
+        if current_date.year != start_date.year:
+            holidays_data = holidays.PL(years=current_date.year).keys()
+        if weekday > 5 or current_date in holidays_data:
+            continue
+        days_to_add -= 1
+
+    return work_days, current_date
 
 
-start_date = date(2022, 7, 20)
-print(start_date)
-print(estimate_date(start_date, 8))
+start_date = date(2022, 10, 31)
+work_days, end_date = estimate_date(start_date, 9)
+print(work_days, end_date)
