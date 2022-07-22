@@ -1,21 +1,25 @@
 import math
 from datetime import date, timedelta
 
-WORKING_HOURS = 8
+import holidays
 
 
-# I assume that user provide date in iso format or just use today's date
 def estimate_date(start_date, estimated_hours):
-    start_date = date.fromisoformat(start_date)
-    work_days = math.ceil(estimated_hours / WORKING_HOURS)
-    task_end_date = (start_date + timedelta(work_days)).strftime("%d-%m-%Y")
-    return work_days, task_end_date
+    work_days = math.floor(estimated_hours / 8)
+    holidays_list = holidays.PL(years=start_date.year).keys()
+    current_date = start_date
+    while work_days:
+        weekday = current_date.isoweekday()
+        if current_date.year != start_date.year:
+            holidays_list = holidays.PL(years=current_date.year).keys()
+        if weekday > 5 or current_date in holidays_list:
+            current_date += timedelta(days=1)
+            continue
+        current_date += timedelta(days=1)
+        work_days -= 1
+    return current_date
 
 
-if __name__ == '__main__':
-    work_days, task_end_date = estimate_date(str(date.today()), 10)
-    print(f'Work days needed to finish the task: {work_days}.')
-    print(f'Estimated end date of task: {task_end_date}.')
-
-
-# We can also use datetime.strptime() to convert specyfic string format to datetime object
+start_date = date(2022, 7, 20)
+print(start_date)
+print(estimate_date(start_date, 8))
