@@ -8,38 +8,24 @@ from is_rectangular_triangle_easy import is_rectangular_triangle
 
 class TestIsInList:
     def test_int_list_with_item(self):
-        data = [1, 2, 3, 4]
-        result = is_in_list(data, 3)
-        assert result == True
+        assert is_in_list([1, 2, 3, 4], 3) == True
 
     def test_int_list_without_item(self):
-        data = [1, 2, 4]
-        result = is_in_list(data, 3)
-        assert result == False
+        assert is_in_list([1, 2, 4], 3) == False
 
     def test_list_with_str(self):
-        data = [1, 2, 3, 'test']
-        result = is_in_list(data, 'test')
-        assert result == True
+        assert is_in_list([1, 2, 3, 'test'], 'test') == True
 
     def test_list_without_str(self):
-        data = [1, 2, 3, 'test']
-        result = is_in_list(data, 'te')
-        assert result == False
+        assert is_in_list([1, 2, 3, 'test'], 'te') == False
 
     def test_list_with_bool_item(self):
-        data = [1, 2, 3, 'test', True]
-        result = is_in_list(data, True)
-        assert result == True
+        assert is_in_list([1, 2, 3, 'test', True], True) == True
 
 
 class TestIsRectangularTriangle:
     def test_invalid_rectangular_traingle_sides(self):
-        sides = [4, 3, 2]
-        result = is_rectangular_triangle(*sides)
-        assert result == False
+        assert is_rectangular_triangle(4, 3, 2) == False
 
     def test_valid_rectangular_triangle_sides(self):
-        sides = [3, 4, 5]
-        result = is_rectangular_triangle(*sides)
-        assert result == True
+        assert is_rectangular_triangle(3, 4, 5) == True
