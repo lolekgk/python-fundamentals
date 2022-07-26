@@ -1,2 +1,3 @@
 /test_tasks_venv
 *.pyc
+.vscode/*
