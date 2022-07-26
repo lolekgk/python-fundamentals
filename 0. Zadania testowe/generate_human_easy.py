@@ -1,7 +1,7 @@
 import random
 import string
-from uuid import uuid4
 from pprint import pprint
+from uuid import uuid4
 
 from names import get_first_name, get_last_name
 
@@ -14,7 +14,7 @@ def generate_country():
 
 
 def generate_phone_number():
-    return int(''.join(random.choices(string.digits, k=9)))
+    return ''.join(random.choices(string.digits, k=9))
 
 
 def generate_human():
@@ -31,6 +31,3 @@ def generate_human():
     ]
 
     return {k: v for k, v in zip(keys, values)}
-
-
-pprint(generate_human())
