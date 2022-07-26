@@ -1,6 +1,5 @@
 import random
 import string
-from pprint import pprint
 from uuid import uuid4
 
 from names import get_first_name, get_last_name
