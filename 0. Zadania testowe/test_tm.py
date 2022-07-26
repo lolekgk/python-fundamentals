@@ -83,6 +83,22 @@ class TestGenerateHuman:
         assert len(result) == 9
         assert result.isnumeric() == True
 
-    # TODO random choice, file read test
+    def test_generate_country(self):
+        with open('countries.txt', 'r') as f:
+            countries = f.read().splitlines()
+        assert generate_country().upper() in countries
+
     def test_generate_human_len(self):
         assert len(generate_human()) == 7
+
+    def test_generate_human_email(self):
+        result = generate_human()
+        assert result['name'].lower() in result['email']
+        assert result['surname'].lower() in result['email']
+
+    def test_generate_human_age(self):
+        result = generate_human()
+        assert result['age'] in range(18, 86)
+
+    def test_generate_human_return_type(self):
+        assert isinstance(generate_human(), dict)
