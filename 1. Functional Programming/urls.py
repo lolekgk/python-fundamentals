@@ -12,9 +12,9 @@ def shrunk_url(url):
 
 
 def domain_of_url(url):
-    # netloc = urlparse(url).netloc.split('.')
-    # return '.'.join(netloc[1:])
-    return urlparse(url).hostname
+    netloc = urlparse(url).netloc.split('.')
+    return '.'.join(netloc[1:])
+    # return urlparse(url).hostname
 
 
 def url_list(url):
