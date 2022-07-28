@@ -11,9 +11,9 @@ def random_number():
         yield number
 
 
-gen = random_number()
+# gen = random_number()
 
-for _ in range(10):
-    num = next(gen)
+# for _ in range(10):
+#     num = next(gen)
 
-print(history)
+# print(history)
