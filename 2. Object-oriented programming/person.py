@@ -11,7 +11,6 @@ class Person:
         self.surname = surname
         self.second_name = second_name
         self._acquaintances = []
-        self._email = f'{first_name}.{surname}@gmail.com'.lower()
         self._address = address
 
     def __repr__(self):
@@ -19,7 +18,7 @@ class Person:
             f"Person(first_name='{self.first_name}', "
             f"second_name='{self.second_name}', "
             f"surname='{self.surname}', "
-            f'address="{self._address})" '
+            f'address="{self._address})"'
         )
 
     def __str__(self):
@@ -43,7 +42,7 @@ class Person:
 
     @property
     def email(self):
-        return self._email
+        return f'{self.first_name}.{self.surname}@gmail.com'.lower()
 
     @property
     def acquaintances(self):
