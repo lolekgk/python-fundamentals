@@ -31,6 +31,15 @@ class Person:
             f'{self.address.city} {self.address.state}'
         )
 
+    def __eq__(self, other):
+        return all(
+            [
+                self.first_name == other.first_name,
+                self.surname == other.surname,
+                self.second_name == other.second_name,
+            ]
+        )
+
     def _validate_user_input(self, user_input, var_name):
         if not isinstance(user_input, str):
             raise TypeError(
@@ -106,7 +115,7 @@ class Address:
             f"Address(street='{self.street}', "
             f"city='{self.city}', "
             f"state='{self.state}', "
-            f"zipcode='{self.zipcode})' "
+            f"zipcode='{self.zipcode})'"
         )
 
     def __str__(self):
@@ -114,7 +123,17 @@ class Address:
             f"Street: {self.street}, "
             f"Zipcode: {self.zipcode}, "
             f"City: {self.city}, "
-            f"State: {self.state} "
+            f"State: {self.state}"
+        )
+
+    def __eq__(self, other):
+        return all(
+            [
+                self.street == other.street,
+                self.city == other.city,
+                self.zipcode == other.zipcode,
+                self.state == other.state,
+            ]
         )
 
     def _validate_user_input(self, user_input, var_name):
