@@ -34,3 +34,19 @@ class Fahrenheit(Unit):
 
     def to_si(self):
         return (self.value + 459.67) * 5 / 9
+
+
+class Centimeter(Unit):
+    quantity = 'length'
+    unit_symbol = 'cm'
+
+    def to_si(self):
+        return self.value * 0.01
+
+
+class Inch(Unit):
+    quantity = 'length'
+    unit_symbol = '″'
+
+    def to_si(self):
+        return self.value * 0.0254
