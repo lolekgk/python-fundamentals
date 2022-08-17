@@ -58,7 +58,7 @@ class Fahrenheit(Unit):
         return (self.value + 459.67) * 5 / 9
 
     def to_celsius(self):
-        value = (self.value - 32) * 0.5556
+        value = (self.value - 32) * 5 / 9
         return Celsius(value)
 
 
