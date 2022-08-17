@@ -50,3 +50,19 @@ class Inch(Unit):
 
     def to_si(self):
         return self.value * 0.0254
+
+
+class Kilometer(Unit):
+    quantity = 'length'
+    unit_symbol = 'km'
+
+    def to_si(self):
+        return self.value * 1000
+
+
+class Mile(Unit):
+    quantity = 'length'
+    unit_symbol = 'mi.'
+
+    def to_si(self):
+        return self.value * 1609.344
