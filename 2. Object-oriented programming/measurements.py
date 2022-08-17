@@ -27,7 +27,7 @@ class Celcius(Unit):
     def to_si(self):
         return self.value + 273.15
 
-    def to_Fahrenheit(self):
+    def to_fahrenheit(self):
         value = self.value * 1.8 + 32
         return Fahrenheit(value)
 
@@ -39,7 +39,7 @@ class Fahrenheit(Unit):
     def to_si(self):
         return (self.value + 459.67) * 5 / 9
 
-    def to_Celcius(self):
+    def to_celcius(self):
         value = (self.value - 32) * 0.5556
         return Celcius(value)
 
@@ -51,8 +51,8 @@ class Centimeter(Unit):
     def to_si(self):
         return self.value * 0.01
 
-    def to_Inch(self):
-        value = self.value * 0.3937007874
+    def to_inch(self):
+        value = self.value / 2.54
         return Inch(value)
 
 
@@ -62,6 +62,10 @@ class Inch(Unit):
 
     def to_si(self):
         return self.value * 0.0254
+
+    def to_centimeter(self):
+        value = self.value * 2.54
+        return Centimeter(value)
 
 
 class Kilometer(Unit):
@@ -82,7 +86,7 @@ class Mile(Unit):
 
 class Liter(Unit):
     quantity = 'volume'
-    unit_symbol = 'L'
+    unit_symbol = 'l'
 
     def to_si(self):
         return self.value * 0.001
