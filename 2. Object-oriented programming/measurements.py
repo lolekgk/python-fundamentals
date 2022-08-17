@@ -66,3 +66,19 @@ class Mile(Unit):
 
     def to_si(self):
         return self.value * 1609.344
+
+
+class Liter(Unit):
+    quantity = 'volume'
+    unit_symbol = 'L'
+
+    def to_si(self):
+        return self.value * 0.001
+
+
+class Gallon(Unit):
+    quantity = 'volume'
+    unit_symbol = 'gal'
+
+    def to_si(self):
+        return self.value * 0.0037854118
