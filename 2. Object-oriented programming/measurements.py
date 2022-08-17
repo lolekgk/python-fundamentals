@@ -87,6 +87,10 @@ class Mile(Unit):
     def to_si(self):
         return self.value * 1609.344
 
+    def to_kilometer(self):
+        value = self.value * 1.609
+        return Kilometer(value)
+
 
 class Liter(Unit):
     quantity = 'volume'
