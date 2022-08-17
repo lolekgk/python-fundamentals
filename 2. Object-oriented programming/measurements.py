@@ -75,6 +75,10 @@ class Kilometer(Unit):
     def to_si(self):
         return self.value * 1000
 
+    def to_mile(self):
+        value = self.value / 1.609
+        return Mile(value)
+
 
 class Mile(Unit):
     quantity = 'length'
