@@ -19,6 +19,24 @@ class Unit(ABC):
     def __init__(self, value):
         self.value = value
 
+    def __str__(self):
+        return f'{self.value} {self.unit_symbol}'
+
+    def __eq__(self, other):
+        if self.quantity == other.quantity:
+            return self.to_si() == other.to_si()
+        return NotImplemented
+
+    def __ge__(self, other):
+        if self.quantity == other.quantity:
+            return self.to_si() >= other.to_si()
+        return NotImplemented
+
+    def __gt__(self, other):
+        if self.quantity == other.quantity:
+            return self.to_si() > other.to_si()
+        return NotImplemented
+
 
 class Celcius(Unit):
     quantity = 'temperature'
