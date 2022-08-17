@@ -38,7 +38,7 @@ class Unit(ABC):
         return NotImplemented
 
 
-class Celcius(Unit):
+class Celsius(Unit):
     quantity = 'temperature'
     unit_symbol = '°C'
 
