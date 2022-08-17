@@ -99,6 +99,10 @@ class Liter(Unit):
     def to_si(self):
         return self.value * 0.001
 
+    def to_gallon(self):
+        value = self / 3.785
+        return Gallon(value)
+
 
 class Gallon(Unit):
     quantity = 'volume'
