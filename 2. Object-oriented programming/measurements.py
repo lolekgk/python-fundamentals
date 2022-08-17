@@ -20,7 +20,7 @@ class Unit(ABC):
         self.value = value
 
     def __str__(self):
-        return f'{self.value} {self.unit_symbol}'
+        return f'{self.value}{self.unit_symbol}'
 
     def __eq__(self, other):
         if self.quantity == other.quantity:
@@ -57,9 +57,9 @@ class Fahrenheit(Unit):
     def to_si(self):
         return (self.value + 459.67) * 5 / 9
 
-    def to_celcius(self):
+    def to_celsius(self):
         value = (self.value - 32) * 0.5556
-        return Celcius(value)
+        return Celsius(value)
 
 
 class Centimeter(Unit):
