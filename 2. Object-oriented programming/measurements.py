@@ -27,6 +27,10 @@ class Celcius(Unit):
     def to_si(self):
         return self.value + 273.15
 
+    def to_Fahrenheit(self):
+        value = self.value * 1.8 + 32
+        return Fahrenheit(value)
+
 
 class Fahrenheit(Unit):
     quantity = 'temperature'
@@ -82,3 +86,7 @@ class Gallon(Unit):
 
     def to_si(self):
         return self.value * 0.0037854118
+
+
+temp = Celcius(30)
+print(temp.to_Fahrenheit().value)
