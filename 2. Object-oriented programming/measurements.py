@@ -100,7 +100,7 @@ class Liter(Unit):
         return self.value * 0.001
 
     def to_gallon(self):
-        value = self / 3.785
+        value = self.value / 3.785
         return Gallon(value)
 
 
@@ -111,6 +111,6 @@ class Gallon(Unit):
     def to_si(self):
         return self.value * 0.0037854118
 
-
-temp = Celcius(30)
-print(temp.to_Fahrenheit().value)
+    def to_liter(self):
+        value = self.value * 3.785
+        return Liter(value)
