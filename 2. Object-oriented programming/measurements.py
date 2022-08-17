@@ -39,6 +39,10 @@ class Fahrenheit(Unit):
     def to_si(self):
         return (self.value + 459.67) * 5 / 9
 
+    def to_Celcius(self):
+        value = (self.value - 32) * 0.5556
+        return Celcius(value)
+
 
 class Centimeter(Unit):
     quantity = 'length'
