@@ -117,27 +117,27 @@ class TestPerson:
 
     def test_first_name_init_validation_not_str(self):
         with pytest.raises(TypeError):
-            person = Person(1, 'Kowalski', 'Brad')
+            Person(1, 'Kowalski', 'Brad')
 
     def test_second_name_init_validation_not_str(self):
         with pytest.raises(TypeError):
-            person = Person('Jan', 'Kowalski', 1)
+            Person('Jan', 'Kowalski', 1)
 
     def test_surname_init_validation_not_str(self):
         with pytest.raises(TypeError):
-            person = Person('Jan', 1, 'Kowal')
+            Person('Jan', 1, 'Kowal')
 
     def test_first_name_init_validation_len(self):
         with pytest.raises(ValueError):
-            person = Person('J', 'Kowalski', 'Brad')
+            Person('J', 'Kowalski', 'Brad')
 
     def test_second_name_init_validation_len(self):
         with pytest.raises(ValueError):
-            person = Person('Jan', 'Kowalski', 'Z')
+            Person('Jan', 'Kowalski', 'Z')
 
     def test_surname_init_validation_len(self):
         with pytest.raises(ValueError):
-            person = Person('Jan', 'B', 'Brad')
+            Person('Jan', 'B', 'Brad')
 
     def test_first_name_set_attribute_validation_not_str(self):
         person = Person('Joshua', 'Kowalski')
@@ -194,7 +194,7 @@ class TestAddress:
             "Address(street='Kwiatowa 10/2', "
             "city='Warszawa', "
             "state='Mazowieckie', "
-            "zipcode='30222)' "
+            "zipcode='30222')"
         )
 
     def test_address_str(self):
@@ -208,19 +208,19 @@ class TestAddress:
 
     def test_street_init_validation_not_str(self):
         with pytest.raises(TypeError):
-            address = Address(1, 'Warszawa', 'Mazowieckie', 30222)
+            Address(1, 'Warszawa', 'Mazowieckie', 30222)
 
     def test_city_init_validation_not_str(self):
         with pytest.raises(TypeError):
-            address = Address('Angielska', 1, 'Mazowieckie', 30222)
+            Address('Angielska', 1, 'Mazowieckie', 30222)
 
     def test_state_init_validation_not_str(self):
         with pytest.raises(TypeError):
-            address = Address('Kwiatowa', 'Warszawa', 1, 30222)
+            Address('Kwiatowa', 'Warszawa', 1, 30222)
 
     def test_zipcode_init_validation_not_int(self):
         with pytest.raises(TypeError):
-            address = Address('Kwiatowa', 'Warszawa', 'test', '50222')
+            Address('Kwiatowa', 'Warszawa', 'test', '50222')
 
     def test_street_set_attribute_validation_not_str(self):
         address = Address('Kwiatowa 10/2', 'Warszawa', 'Mazowieckie', 30222)

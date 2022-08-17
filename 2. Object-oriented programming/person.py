@@ -115,7 +115,7 @@ class Address:
             f"Address(street='{self.street}', "
             f"city='{self.city}', "
             f"state='{self.state}', "
-            f"zipcode='{self.zipcode})'"
+            f"zipcode='{self.zipcode}')"
         )
 
     def __str__(self):
