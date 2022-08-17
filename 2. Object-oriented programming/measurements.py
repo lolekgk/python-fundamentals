@@ -51,6 +51,10 @@ class Centimeter(Unit):
     def to_si(self):
         return self.value * 0.01
 
+    def to_Inch(self):
+        value = self.value * 0.3937007874
+        return Inch(value)
+
 
 class Inch(Unit):
     quantity = 'length'
