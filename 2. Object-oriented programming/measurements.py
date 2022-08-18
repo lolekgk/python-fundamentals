@@ -155,10 +155,3 @@ class Gallon(Unit):
     def to_liter(self):
         value = self.value * 3.785
         return Liter(value)
-
-
-mile = Mile(60)
-print(mile.to_si())
-km = Kilometer(96.5606)
-print(km.to_si())
-print(mile < km)
