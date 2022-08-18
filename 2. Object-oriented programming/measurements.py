@@ -1,4 +1,5 @@
 from abc import ABC, abstractmethod
+from math import isclose
 
 
 class Unit(ABC):
@@ -24,17 +25,39 @@ class Unit(ABC):
 
     def __eq__(self, other):
         if self.quantity == other.quantity:
-            return self.to_si() == other.to_si()
+            return isclose(self.to_si(), other.to_si(), rel_tol=0.00001)
         return NotImplemented
 
     def __ge__(self, other):
         if self.quantity == other.quantity:
-            return self.to_si() >= other.to_si()
+            return (
+                isclose(self.to_si(), other.to_si(), rel_tol=0.00001)
+                or self.to_si() > other.to_si()
+            )
+        return NotImplemented
+
+    def __le__(self, other):
+        if self.quantity == other.quantity:
+            return (
+                isclose(self.to_si(), other.to_si(), rel_tol=0.00001)
+                or self.to_si() < other.to_si()
+            )
         return NotImplemented
 
     def __gt__(self, other):
         if self.quantity == other.quantity:
-            return self.to_si() > other.to_si()
+            return (
+                not isclose(self.to_si(), other.to_si(), rel_tol=0.00001)
+                and self.to_si() > other.to_si()
+            )
+        return NotImplemented
+
+    def __lt__(self, other):
+        if self.quantity == other.quantity:
+            return (
+                not isclose(self.to_si(), other.to_si(), rel_tol=0.00001)
+                and self.to_si() < other.to_si()
+            )
         return NotImplemented
 
 
@@ -132,3 +155,10 @@ class Gallon(Unit):
     def to_liter(self):
         value = self.value * 3.785
         return Liter(value)
+
+
+mile = Mile(60)
+print(mile.to_si())
+km = Kilometer(96.5606)
+print(km.to_si())
+print(mile < km)
