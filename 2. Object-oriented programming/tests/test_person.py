@@ -50,8 +50,7 @@ class TestPerson:
             "Second name: Brad, "
             "Surname: Kowalski, "
             "Email: joshua.kowalski@gmail.com, "
-            'Address: Kwiatowa 10/2 30222 '
-            'Warszawa Mazowieckie'
+            'Address: [Street: Kwiatowa 10/2, Zipcode: 30222, City: Warszawa, State: Mazowieckie]'
         )
 
     def test_user_creation_only_two_attributes_are_required(self):
