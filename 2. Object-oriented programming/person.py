@@ -1,11 +1,13 @@
 from __future__ import annotations
 
-# type['Person'] czy ten import? -> powinno działać od 3.10 bez powyzszego importu, lecz nie działa
-
 
 class Person:
     def __init__(
-        self, first_name: str, surname: str, second_name=None, address=None
+        self,
+        first_name: str,
+        surname: str,
+        second_name: str = None,
+        address: type[Address] = None,
     ):
         self.first_name = first_name
         self.surname = surname
@@ -13,7 +15,7 @@ class Person:
         self._acquaintances = []
         self._address = address
 
-    def __repr__(self):
+    def __repr__(self) -> str:
         return (
             f"Person(first_name='{self.first_name}', "
             f"second_name='{self.second_name}', "
@@ -21,7 +23,7 @@ class Person:
             f'address="{repr(self.address)}"'
         )
 
-    def __str__(self):
+    def __str__(self) -> str:
         return (
             f"First name: {self.first_name}, "
             f"Second name: {self.second_name}, "
@@ -31,7 +33,7 @@ class Person:
             f'{self.address.city} {self.address.state}'
         )
 
-    def __eq__(self, other):
+    def __eq__(self, other) -> bool:
         return all(
             [
                 self.first_name == other.first_name,
@@ -45,25 +47,25 @@ class Person:
             raise TypeError(
                 f'The value of "{var_name}" should be of type str.'
             )
-        elif len(user_input) < 2:
+        if len(user_input) < 2:
             raise ValueError(
                 f'The length of "{var_name}" should be 2 at least.'
             )
 
     @property
-    def email(self):
+    def email(self) -> str:
         return f'{self.first_name}.{self.surname}@gmail.com'.lower()
 
     @property
-    def acquaintances(self):
+    def acquaintances(self) -> list:
         return self._acquaintances
 
     @property
-    def address(self):
+    def address(self) -> type[Address]:
         return self._address
 
     @property
-    def first_name(self):
+    def first_name(self) -> str:
         return self._first_name
 
     @first_name.setter
@@ -72,7 +74,7 @@ class Person:
         self._first_name = first_name
 
     @property
-    def second_name(self):
+    def second_name(self) -> str:
         return self._second_name
 
     @second_name.setter
@@ -82,7 +84,7 @@ class Person:
         self._second_name = second_name
 
     @property
-    def surname(self):
+    def surname(self) -> str:
         return self._surname
 
     @surname.setter
@@ -90,27 +92,25 @@ class Person:
         Person._validate_user_input(self, surname, 'surname')
         self._surname = surname
 
-    def add_acquaintance(self, acquaintance: type[Person]) -> None:
+    def add_acquaintance(self, acquaintance: type[Person]):
         if not isinstance(acquaintance, Person):
             raise TypeError('Acquaintance should be of type Person.')
         elif acquaintance not in self._acquaintances:
             self._acquaintances.append(acquaintance)
 
-    def delete_acquaintance(self, acquaintance: type[Person]) -> None:
+    def delete_acquaintance(self, acquaintance: type[Person]):
         if acquaintance in self._acquaintances:
             self._acquaintances.remove(acquaintance)
 
 
 class Address:
-    def __init__(
-        self, street: str, city: str, state: str, zipcode: int
-    ) -> None:
+    def __init__(self, street: str, city: str, state: str, zipcode: int):
         self.street = street
         self.city = city
         self.state = state
         self.zipcode = zipcode
 
-    def __repr__(self):
+    def __repr__(self) -> str:
         return (
             f"Address(street='{self.street}', "
             f"city='{self.city}', "
@@ -118,7 +118,7 @@ class Address:
             f"zipcode='{self.zipcode}')"
         )
 
-    def __str__(self):
+    def __str__(self) -> str:
         return (
             f"Street: {self.street}, "
             f"Zipcode: {self.zipcode}, "
@@ -126,7 +126,7 @@ class Address:
             f"State: {self.state}"
         )
 
-    def __eq__(self, other):
+    def __eq__(self, other) -> bool:
         return all(
             [
                 self.street == other.street,
@@ -143,38 +143,38 @@ class Address:
             )
 
     @property
-    def street(self):
+    def street(self) -> str:
         return self._street
 
     @street.setter
-    def street(self, value):
+    def street(self, value: str):
         Address._validate_user_input(self, value, 'street')
         self._street = value
 
     @property
-    def city(self):
+    def city(self) -> str:
         return self._city
 
     @city.setter
-    def city(self, value):
+    def city(self, value: str):
         Address._validate_user_input(self, value, 'city')
         self._city = value
 
     @property
-    def state(self):
+    def state(self) -> str:
         return self._state
 
     @state.setter
-    def state(self, value):
+    def state(self, value: str):
         Address._validate_user_input(self, value, 'state')
         self._state = value
 
     @property
-    def zipcode(self):
+    def zipcode(self) -> int:
         return self._zipcode
 
     @zipcode.setter
-    def zipcode(self, value):
+    def zipcode(self, value: int):
         if not isinstance(value, int):
             raise TypeError('Zipcode should be of the type int.')
         self._zipcode = value
