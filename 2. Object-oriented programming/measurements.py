@@ -1,16 +1,18 @@
 from abc import ABC, abstractmethod
+from enum import Enum
 from math import isclose
+
+
+class MeasurementType(Enum):
+    length = 'length'
+    temperature = 'temperature'
+    volume = 'volume'
 
 
 class Unit(ABC):
     @property
     @abstractmethod
     def unit_symbol(self):
-        pass
-
-    @property
-    @abstractmethod
-    def quantity(self):
         pass
 
     @abstractmethod
@@ -24,45 +26,55 @@ class Unit(ABC):
         return f'{self.value}{self.unit_symbol}'
 
     def __eq__(self, other):
-        if self.quantity == other.quantity:
+        if self.type == other.type:
             return isclose(self.to_si(), other.to_si(), rel_tol=0.00001)
-        return NotImplemented
+        raise TypeError(
+            f"'==' not supported between instances of '{type(self).__name__}' and '{type(other).__name__}'"
+        )
 
     def __ge__(self, other):
-        if self.quantity == other.quantity:
+        if self.type == other.type:
             return (
                 isclose(self.to_si(), other.to_si(), rel_tol=0.00001)
                 or self.to_si() > other.to_si()
             )
-        return NotImplemented
+        raise TypeError(
+            f"'>=' not supported between instances of '{type(self).__name__}' and '{type(other).__name__}'"
+        )
 
     def __le__(self, other):
-        if self.quantity == other.quantity:
+        if self.type == other.type:
             return (
                 isclose(self.to_si(), other.to_si(), rel_tol=0.00001)
                 or self.to_si() < other.to_si()
             )
-        return NotImplemented
+        raise TypeError(
+            f"'<=' not supported between instances of '{type(self).__name__}' and '{type(other).__name__}'"
+        )
 
     def __gt__(self, other):
-        if self.quantity == other.quantity:
+        if self.type == other.type:
             return (
                 not isclose(self.to_si(), other.to_si(), rel_tol=0.00001)
                 and self.to_si() > other.to_si()
             )
-        return NotImplemented
+        raise TypeError(
+            f"'>' not supported between instances of '{type(self).__name__}' and '{type(other).__name__}'"
+        )
 
     def __lt__(self, other):
-        if self.quantity == other.quantity:
+        if self.type == other.type:
             return (
                 not isclose(self.to_si(), other.to_si(), rel_tol=0.00001)
                 and self.to_si() < other.to_si()
             )
-        return NotImplemented
+        raise TypeError(
+            f"'<' not supported between instances of '{type(self).__name__}' and '{type(other).__name__}'"
+        )
 
 
 class Celsius(Unit):
-    quantity = 'temperature'
+    type = MeasurementType.temperature
     unit_symbol = '°C'
 
     def to_si(self):
@@ -74,7 +86,7 @@ class Celsius(Unit):
 
 
 class Fahrenheit(Unit):
-    quantity = 'temperature'
+    type = MeasurementType.temperature
     unit_symbol = '°F'
 
     def to_si(self):
@@ -86,7 +98,7 @@ class Fahrenheit(Unit):
 
 
 class Centimeter(Unit):
-    quantity = 'length'
+    type = MeasurementType.length
     unit_symbol = 'cm'
 
     def to_si(self):
@@ -98,7 +110,7 @@ class Centimeter(Unit):
 
 
 class Inch(Unit):
-    quantity = 'length'
+    type = MeasurementType.length
     unit_symbol = '″'
 
     def to_si(self):
@@ -110,7 +122,7 @@ class Inch(Unit):
 
 
 class Kilometer(Unit):
-    quantity = 'length'
+    type = MeasurementType.length
     unit_symbol = 'km'
 
     def to_si(self):
@@ -122,7 +134,7 @@ class Kilometer(Unit):
 
 
 class Mile(Unit):
-    quantity = 'length'
+    type = MeasurementType.length
     unit_symbol = 'mi.'
 
     def to_si(self):
@@ -134,7 +146,7 @@ class Mile(Unit):
 
 
 class Liter(Unit):
-    quantity = 'volume'
+    type = MeasurementType.volume
     unit_symbol = 'l'
 
     def to_si(self):
@@ -146,7 +158,7 @@ class Liter(Unit):
 
 
 class Gallon(Unit):
-    quantity = 'volume'
+    type = MeasurementType.volume
     unit_symbol = 'gal'
 
     def to_si(self):
@@ -155,3 +167,8 @@ class Gallon(Unit):
     def to_liter(self):
         value = self.value * 3.785
         return Liter(value)
+
+
+c = Celsius(1)
+print(c.type)
+print(MeasurementType.temperature)
