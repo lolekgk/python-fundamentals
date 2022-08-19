@@ -167,8 +167,3 @@ class Gallon(Unit):
     def to_liter(self):
         value = self.value * 3.785
         return Liter(value)
-
-
-c = Celsius(1)
-print(c.type)
-print(MeasurementType.temperature)
