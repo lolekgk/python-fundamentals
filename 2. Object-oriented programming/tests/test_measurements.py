@@ -9,20 +9,19 @@ from measurements import (
     Inch,
     Kilometer,
     Liter,
+    MeasurementType,
     Mile,
 )
 
 
 class TestCelsiusAndFahrenheit:
-    def test_celsius_creation(self):
+    def test_celsius_type(self):
         temp = Celsius(32)
-        assert temp.value == 32
-        assert str(temp) == '32°C'
+        assert temp.type.value == 'temperature'
 
     def test_fahrenheit_creation(self):
         temp = Fahrenheit(91.2)
-        assert temp.value == 91.2
-        assert str(temp) == '91.2°F'
+        assert temp.type.value == 'temperature'
 
     def test_convert_celsius_to_si(self):
         temp = Celsius(32)
@@ -82,13 +81,11 @@ class TestCelsiusAndFahrenheit:
 class TestCentimeterAndInch:
     def test_centimeter_creation(self):
         cm = Centimeter(100)
-        assert cm.value == 100
-        assert str(cm) == '100cm'
+        assert cm.type.value == 'length'
 
     def test_inch_creation(self):
         inch = Inch(10)
-        assert inch.value == 10
-        assert str(inch) == '10″'
+        assert inch.type.value == 'length'
 
     def test_centimeter_to_si(self):
         cm = Centimeter(90)
@@ -125,13 +122,11 @@ class TestCentimeterAndInch:
 class TestKilometerAndMile:
     def test_kilometer_creation(self):
         km = Kilometer(100)
-        assert km.value == 100
-        assert str(km) == '100km'
+        assert km.type.value == 'length'
 
     def test_mile_creation(self):
         mile = Mile(20)
-        assert mile.value == 20
-        assert str(mile) == '20mi.'
+        assert mile.type.value == 'length'
 
     def test_kilometer_to_si(self):
         km = Kilometer(24)
@@ -168,13 +163,11 @@ class TestKilometerAndMile:
 class TestLiterAndGallon:
     def test_liter_creation(self):
         l = Liter(100)
-        assert l.value == 100
-        assert str(l) == '100l'
+        assert l.type.value == 'volume'
 
     def test_gallon_creation(self):
         gal = Gallon(1)
-        assert gal.value == 1
-        assert str(gal) == '1gal'
+        assert gal.type.value == 'volume'
 
     def test_liter_to_si(self):
         l = Liter(1000)
@@ -225,13 +218,15 @@ def test_different_types_comparision_less_than():
 def test_different_types_comparision_equall():
     km = Kilometer(50)
     temp = Celsius(20)
-    assert not km == temp
+    with pytest.raises(TypeError):
+        km == temp
 
 
 def test_different_types_comparision_not_equall():
     km = Kilometer(50)
     temp = Celsius(20)
-    assert km != temp
+    with pytest.raises(TypeError):
+        km != temp
 
 
 def test_different_types_comparision_greather_or_equall():

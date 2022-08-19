@@ -59,8 +59,8 @@ class TestPerson:
         assert person.first_name == 'Joshua'
         assert person.surname == 'Kowalski'
         assert person.email == 'joshua.kowalski@gmail.com'
-        assert person.address == None
-        assert person.second_name == None
+        assert person.address is None
+        assert person.second_name is None
         assert person.acquaintances == []
 
     def test_add_acquaintance_add_different_friend_objects(self):
