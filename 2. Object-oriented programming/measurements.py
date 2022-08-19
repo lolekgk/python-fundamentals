@@ -4,9 +4,9 @@ from math import isclose
 
 
 class MeasurementType(Enum):
-    length = 'length'
-    temperature = 'temperature'
-    volume = 'volume'
+    LENGTH = 'length'
+    TEMPERATURE = 'temperature'
+    VOLUME = 'volume'
 
 
 class Unit(ABC):
@@ -74,7 +74,7 @@ class Unit(ABC):
 
 
 class Celsius(Unit):
-    type = MeasurementType.temperature
+    type = MeasurementType.TEMPERATURE
     unit_symbol = '°C'
 
     def to_si(self):
@@ -86,7 +86,7 @@ class Celsius(Unit):
 
 
 class Fahrenheit(Unit):
-    type = MeasurementType.temperature
+    type = MeasurementType.TEMPERATURE
     unit_symbol = '°F'
 
     def to_si(self):
@@ -98,7 +98,7 @@ class Fahrenheit(Unit):
 
 
 class Centimeter(Unit):
-    type = MeasurementType.length
+    type = MeasurementType.LENGTH
     unit_symbol = 'cm'
 
     def to_si(self):
@@ -110,7 +110,7 @@ class Centimeter(Unit):
 
 
 class Inch(Unit):
-    type = MeasurementType.length
+    type = MeasurementType.LENGTH
     unit_symbol = '″'
 
     def to_si(self):
@@ -122,7 +122,7 @@ class Inch(Unit):
 
 
 class Kilometer(Unit):
-    type = MeasurementType.length
+    type = MeasurementType.LENGTH
     unit_symbol = 'km'
 
     def to_si(self):
@@ -134,7 +134,7 @@ class Kilometer(Unit):
 
 
 class Mile(Unit):
-    type = MeasurementType.length
+    type = MeasurementType.LENGTH
     unit_symbol = 'mi.'
 
     def to_si(self):
@@ -146,7 +146,7 @@ class Mile(Unit):
 
 
 class Liter(Unit):
-    type = MeasurementType.volume
+    type = MeasurementType.VOLUME
     unit_symbol = 'l'
 
     def to_si(self):
@@ -158,7 +158,7 @@ class Liter(Unit):
 
 
 class Gallon(Unit):
-    type = MeasurementType.volume
+    type = MeasurementType.VOLUME
     unit_symbol = 'gal'
 
     def to_si(self):
