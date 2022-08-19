@@ -79,7 +79,7 @@ class Person:
     def second_name(self, second_name: str):
         if second_name:
             Person._validate_user_input(self, second_name, 'second_name')
-        self._second_name = second_name
+            self._second_name = second_name
 
     @property
     def surname(self):
