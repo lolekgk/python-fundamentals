@@ -29,8 +29,7 @@ class Person:
             f"Second name: {self.second_name}, "
             f"Surname: {self.surname}, "
             f"Email: {self.email}, "
-            f'Address: {self.address.street} {self.address.zipcode} '
-            f'{self.address.city} {self.address.state}'
+            f'Address: [{str(self.address)}]'
         )
 
     def __eq__(self, other) -> bool:
