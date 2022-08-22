@@ -26,10 +26,6 @@ class Airplane:
         self._flights.append(self)
 
     @property
-    def flight_id(self):
-        return self._flight_id
-
-    @property
     def status(self) -> str:
         if self.start_time and self.landing_time is not None:
             if (
@@ -42,15 +38,16 @@ class Airplane:
         return self._status
 
     @property
-    def _flight_number(self) -> int:
-        return self._flight_number
-
-    @property
-    def _flight_id(self):
+    def flight_id(self):
         return self._flight_id
 
     def flight_time(self) -> datetime:
-        return self.landing_time - self.start_time
+        if self.start_time and self.landing_time is not None:
+            return self.landing_time - self.start_time
+        else:
+            raise ValueError(
+                'You need to provide start_time and landing_time to calculate flight_time!'
+            )
 
     @classmethod
     def list_all_flights(cls) -> list:
