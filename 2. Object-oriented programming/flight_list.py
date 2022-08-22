@@ -49,3 +49,6 @@ class Airplane:
     @classmethod
     def list_all_flights(cls):
         return cls.flights
+
+
+# test
