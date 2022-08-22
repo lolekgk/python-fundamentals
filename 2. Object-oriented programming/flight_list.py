@@ -5,18 +5,24 @@ from datetime import datetime
 
 @dataclass(slots=True)
 class Airplane:
+    _flights = []
+
     flight_number: int
     destination: str
     origin: str
     start_time: datetime = field(default=None)
     landing_time: datetime = field(default=None)
     _flight_id: uuid = field(
-        default_factory=uuid.uuid4, init=False, repr=False
+        default_factory=uuid.uuid4, init=False, repr=False, compare=False
     )
-    _flights: list = field(default_factory=list, init=False, repr=False)
     _status: str = field(default='on the ground', init=False, repr=False)
 
     def __post_init__(self):
+        for flight in self._flights:
+            if self == flight:
+                raise ValueError(
+                    'You cannot create flight with same attributes!'
+                )
         self._flights.append(self)
 
     @property
@@ -38,14 +44,17 @@ class Airplane:
             self._status = 'on the ground'
         return self._status
 
-    @status.setter
-    def status(self, status: str):
-        if not isinstance(status, str):
-            raise TypeError(f'The value of "" should be of type str.')
+    @property
+    def _flight_number(self):
+        return self._flight_number
+
+    @property
+    def _flight_id(self):
+        return self._flight_id
 
     def flight_time(self):
         return self.landing_time - self.start_time
 
     @classmethod
     def list_all_flights(cls):
-        return cls.flights
+        return cls._flights
