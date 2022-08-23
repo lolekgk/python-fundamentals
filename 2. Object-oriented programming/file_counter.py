@@ -17,7 +17,7 @@ class FileCounter:
             if item.is_dir():
                 self._dirs_count += 1
                 dirs.append(self._create_files_tree(item))
-            else:
+            if item.is_file():
                 self._files_count += 1
                 files.append(item.name)
         return {
