@@ -41,7 +41,7 @@ class Person:
             ]
         )
 
-    def _validate_user_input(self, user_input, var_name):
+    def _validate_user_input(self, user_input: str, var_name: str):
         if not isinstance(user_input, str):
             raise TypeError(
                 f'The value of "{var_name}" should be of type str.'
@@ -135,7 +135,7 @@ class Address:
             ]
         )
 
-    def _validate_user_input(self, user_input, var_name):
+    def _validate_user_input(self, user_input: str, var_name: str):
         if not isinstance(user_input, str):
             raise TypeError(
                 f'The value of "{var_name}" should be of type str.'
