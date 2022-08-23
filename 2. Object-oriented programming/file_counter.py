@@ -2,9 +2,9 @@ from pathlib import Path
 
 
 class FileCounter:
-    def __init__(self):
-        self._files_count = 0
-        self._dirs_count = 0
+
+    _files_count: int = 0
+    _dirs_count: int = 0
 
     def __reset(self):
         "Reset instance attributes to init values"
