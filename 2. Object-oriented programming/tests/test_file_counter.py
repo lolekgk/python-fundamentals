@@ -4,6 +4,7 @@ import pytest
 from file_counter import FileCounter
 
 
+# fs is fixture from pyfakefs library
 @pytest.fixture
 def extensive_fake_path(fs):
     # "fs" is the reference to the fake file system
@@ -38,8 +39,6 @@ def path():
 
 
 class TestFileCounter:
-    # fs is fixture from pyfakefs library
-
     def test_file_counter_with_extensive_path(
         self, extensive_fake_path, path, file_counter
     ):
