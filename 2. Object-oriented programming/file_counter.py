@@ -28,9 +28,9 @@ class FileCounter:
 
     def file_counter(self, path: Path) -> dict:
         self.__reset()
-        searched_tree = self._create_files_tree(path)
+        files_tree = self._create_files_tree(path)
         return {
             'files': self._files_count,
             'folders': self._dirs_count,
-            'results': searched_tree,
+            'results': files_tree,
         }
