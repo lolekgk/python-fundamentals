@@ -15,47 +15,65 @@ from measurements import (
 
 @pytest.fixture
 def temp_celsius():
-    return Celsius(32)
+    celsius = Celsius(32)
+    yield celsius
+    del celsius
 
 
 @pytest.fixture
 def temp_celsius2():
-    return Celsius(40)
+    celsius = Celsius(40)
+    yield celsius
+    del celsius
 
 
 @pytest.fixture
 def temp_fahrenheit():
-    return Fahrenheit(91.2)
+    temp = Fahrenheit(91.2)
+    yield temp
+    del temp
 
 
 @pytest.fixture
 def cm():
-    return Centimeter(25.4)
+    cm = Centimeter(25.4)
+    yield cm
+    del cm
 
 
 @pytest.fixture
 def inch():
-    return Inch(100)
+    inch = Inch(100)
+    yield inch
+    del inch
 
 
 @pytest.fixture
 def mile():
-    return Mile(80)
+    mile = Mile(80)
+    yield mile
+    del mile
 
 
 @pytest.fixture
 def km():
-    return Kilometer(96.5606)
+    km = Kilometer(96.5606)
+    yield km
+    del km
 
 
 @pytest.fixture
 def liter():
-    return Liter(1500)
+    liter = Liter(1500)
+    yield liter
+    del liter
 
 
 @pytest.fixture
 def gal():
-    return Gallon(0.396258)
+    gallon = Gallon(0.396258)
+    yield gallon
+    del gallon
 
 
 class TestCelsiusAndFahrenheit:
