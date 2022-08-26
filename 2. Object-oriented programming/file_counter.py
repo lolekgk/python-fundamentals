@@ -2,11 +2,11 @@ from pathlib import Path
 
 
 class FileCounter:
+    def __init__(self):
+        self._files_count: int = 0
+        self._dirs_count: int = 0
 
-    _files_count: int = 0
-    _dirs_count: int = 0
-
-    def __reset(self):
+    def _reset(self):
         "Reset instance attributes to init values"
         self._files_count = 0
         self._dirs_count = 0
@@ -27,7 +27,7 @@ class FileCounter:
         }
 
     def file_counter(self, path: Path) -> dict:
-        self.__reset()
+        self._reset()
         files_tree = self._create_files_tree(path)
         return {
             'files': self._files_count,
