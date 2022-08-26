@@ -1,29 +1,10 @@
 from abc import ABC, abstractmethod
+from typing import Union
 
 
 class IEmailBuilder(ABC):
     @abstractmethod
-    def set_from_(self, value: str):
-        pass
-
-    @abstractmethod
-    def set_to(self, value: str):
-        pass
-
-    @abstractmethod
-    def set_title(self, value: str):
-        pass
-
-    @abstractmethod
-    def set_cc(self, value: list):
-        pass
-
-    @abstractmethod
-    def set_bcc(self, value: list):
-        pass
-
-    @abstractmethod
-    def set_html(self, value: str):
+    def add_attribute(self, name: str, value: Union[str, list]):
         pass
 
 
@@ -31,33 +12,11 @@ class EmailBuilder(IEmailBuilder):
     def __init__(self):
         self.email = Email()
 
-    # def add_attribute(self, name, value):
-    #     setattr(self.email, name, value)
-    #     return self
-
-    def set_from_(self, value):
-        self.email.from_ = value
-        return self
-
-    def set_to(self, value):
-        self.email.to = value
-        return self
-
-    def set_title(self, value):
-        self.email.title = value
-        return self
-
-    def set_cc(self, value):
-        self.email.cc = value
-        return self
-
-    def set_bcc(self, value):
-        self.email.bcc = value
-        return self
-
-    def set_html(self, value):
-        self.email.html = value
-        return self
+    def add_attribute(self, name, value):
+        if name in self.email.__dict__:
+            setattr(self.email, name, value)
+            return self
+        raise ValueError('You cannot add that attribute.')
 
     def get_result(self):
         return self.email
