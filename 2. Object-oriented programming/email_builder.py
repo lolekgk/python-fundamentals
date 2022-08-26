@@ -16,7 +16,7 @@ class EmailBuilder(IEmailBuilder):
         if name in self.email.__dict__:
             setattr(self.email, name, value)
             return self
-        raise ValueError('You cannot add that attribute.')
+        raise ValueError('You cannot add attribute with provided name.')
 
     def get_result(self):
         return self.email
