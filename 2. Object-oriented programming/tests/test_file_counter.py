@@ -6,7 +6,7 @@ from file_counter import FileCounter
 
 # fs is fixture from pyfakefs library
 @pytest.fixture
-def extensive_fake_path(fs):
+def create_extensive_fake_path(fs):
     # "fs" is the reference to the fake file system
     fs.create_file('/test/test1/xx1.txt')
     fs.create_file('/test/test2/xx2_1.txt')
@@ -19,7 +19,7 @@ def extensive_fake_path(fs):
 
 
 @pytest.fixture
-def simple_fake_path(fs):
+def create_simple_fake_path(fs):
     fs.create_dir('/test')
     yield fs
 
@@ -40,7 +40,7 @@ def path():
 
 class TestFileCounter:
     def test_file_counter_with_extensive_path(
-        self, extensive_fake_path, path, file_counter
+        self, create_extensive_fake_path, path, file_counter
     ):
         result = file_counter.file_counter(path)
         assert result['files'] == 7
@@ -48,21 +48,23 @@ class TestFileCounter:
         assert len(result['results']) == 3
 
     def test_file_counter_with_simple_path(
-        self, simple_fake_path, path, file_counter
+        self, create_simple_fake_path, path, file_counter
     ):
         result = file_counter.file_counter(path)
         assert result['files'] == 0
         assert result['folders'] == 0
         assert len(result['results']) == 3
 
-    def test_create_files_tree(self, extensive_fake_path, path, file_counter):
+    def test_create_files_tree(
+        self, create_extensive_fake_path, path, file_counter
+    ):
         result = file_counter.file_counter(path)
         assert len(result['results']['dirs']) == 3
         assert (
             result['results']['dirs'][-1]['dirs'][-1]['files'][-1] == 'xx3.txt'
         )
 
-    def test_reset(self, extensive_fake_path, path, file_counter):
+    def test_reset(self, create_extensive_fake_path, path, file_counter):
         file_counter.file_counter(path)
         file_counter.file_counter(path)
         assert file_counter._files_count == 7
