@@ -60,6 +60,7 @@ class TestFileCounter:
     ):
         result = file_counter.file_counter(path)
         assert len(result['results']['dirs']) == 3
+        # test the most nested element
         assert (
             result['results']['dirs'][-1]['dirs'][-1]['files'][-1] == 'xx3.txt'
         )
