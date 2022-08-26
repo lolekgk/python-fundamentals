@@ -86,6 +86,15 @@ class TestAirplane:
         with pytest.raises(ValueError):
             airplane_without_dates.flight_time()
 
+    def test_no_permission_for_creating_objects_with_the_same_attributes(self):
+        airplane = Airplane(810, 'Berlin', 'Warsaw', start_time, landing_time)
+        with pytest.raises(ValueError):
+            airplane = Airplane(
+                810, 'Berlin', 'Warsaw', start_time, landing_time
+            )
+        Airplane._flights.remove(airplane)
+        del airplane
+
     def test_list_all_flights(self, airplane, flying_airplane):
         assert len(airplane.list_all_flights()) == 2
         assert len(airplane.list_all_flights()) == len(
@@ -93,10 +102,3 @@ class TestAirplane:
         )
         for flight in airplane.list_all_flights():
             assert isinstance(flight, Airplane)
-
-    def test_no_permission_for_creating_objects_with_the_same_attributes(self):
-        airplane = Airplane(810, 'Berlin', 'Warsaw', start_time, landing_time)
-        with pytest.raises(ValueError):
-            airplane = Airplane(
-                810, 'Berlin', 'Warsaw', start_time, landing_time
-            )
