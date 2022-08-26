@@ -31,6 +31,10 @@ class EmailBuilder(IEmailBuilder):
     def __init__(self):
         self.email = Email()
 
+    # def add_attribute(self, name, value):
+    #     setattr(self.email, name, value)
+    #     return self
+
     def set_from_(self, value):
         self.email.from_ = value
         return self
