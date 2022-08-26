@@ -1,7 +1,6 @@
 from abc import ABC, abstractmethod
 from enum import Enum
 from math import isclose
-from os import kill
 
 
 class MeasurementType(Enum):
