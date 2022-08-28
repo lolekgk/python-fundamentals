@@ -28,7 +28,7 @@ def fake_starting_time():
 def airplane(start_time, landing_time):
     airplane = Airplane(815, 'Berlin', 'Warsaw', start_time, landing_time)
     yield airplane
-    Airplane._flights.remove(airplane)
+    del Airplane._flights[airplane._flight_id]
     del airplane
 
 
@@ -36,7 +36,7 @@ def airplane(start_time, landing_time):
 def airplane_without_start_time(landing_time):
     airplane = Airplane(815, 'Berlin', 'Warsaw', landing_time=landing_time)
     yield airplane
-    Airplane._flights.remove(airplane)
+    del Airplane._flights[airplane._flight_id]
     del airplane
 
 
@@ -44,7 +44,7 @@ def airplane_without_start_time(landing_time):
 def airplane_without_landing_time(start_time):
     airplane = Airplane(815, 'Berlin', 'Warsaw', start_time)
     yield airplane
-    Airplane._flights.remove(airplane)
+    del Airplane._flights[airplane._flight_id]
     del airplane
 
 
@@ -54,7 +54,7 @@ def flying_airplane(fake_starting_time, fake_landing_time):
         113, 'Madrid', 'Wroclaw', fake_starting_time, fake_landing_time
     )
     yield airplane
-    Airplane._flights.remove(airplane)
+    del Airplane._flights[airplane._flight_id]
     del airplane
 
 
@@ -62,7 +62,7 @@ def flying_airplane(fake_starting_time, fake_landing_time):
 def airplane_without_dates():
     airplane = Airplane(113, 'Madrid', 'Wroclaw')
     yield airplane
-    Airplane._flights.remove(airplane)
+    del Airplane._flights[airplane._flight_id]
     del airplane
 
 
@@ -87,12 +87,14 @@ class TestAirplane:
             airplane_without_dates.flight_time()
 
     def test_no_permission_for_creating_objects_with_the_same_attributes(self):
-        airplane = Airplane(810, 'Berlin', 'Warsaw', start_time, landing_time)
+        airplane = Airplane(
+            810, 'Berlin', 'Warsaw', start_time, landing_time, 99
+        )
         with pytest.raises(ValueError):
             airplane = Airplane(
-                810, 'Berlin', 'Warsaw', start_time, landing_time
+                810, 'Berlin', 'Warsaw', start_time, landing_time, 99
             )
-        Airplane._flights.remove(airplane)
+        del Airplane._flights[airplane.flight_id]
         del airplane
 
     def test_list_all_flights(self, airplane, flying_airplane):
@@ -100,5 +102,5 @@ class TestAirplane:
         assert len(airplane.list_all_flights()) == len(
             flying_airplane.list_all_flights()
         )
-        for flight in airplane.list_all_flights():
+        for flight in airplane.list_all_flights().values():
             assert isinstance(flight, Airplane)
