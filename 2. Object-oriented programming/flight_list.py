@@ -17,7 +17,9 @@ class Airplane:
 
     def __post_init__(self):
         if self._flights.get(self._flight_id):
-            raise ValueError('You cannot create flight with same attributes!')
+            raise ValueError(
+                'You cannot create flight with the same attributes!'
+            )
         self._flights[self._flight_id] = self
 
     @property
