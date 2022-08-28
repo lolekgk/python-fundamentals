@@ -5,7 +5,7 @@ from datetime import datetime
 
 @dataclass(slots=True)
 class Airplane:
-    _flights = []
+    _flights = {}
 
     flight_number: int
     destination: str
@@ -13,17 +13,14 @@ class Airplane:
     start_time: datetime = field(default=None)
     landing_time: datetime = field(default=None)
     _flight_id: uuid = field(
-        default_factory=uuid.uuid4, init=False, repr=False, compare=False
+        default_factory=uuid.uuid4, init=False, repr=False
     )
-    _status: str = field(default='on the ground', init=False, repr=False)
+    _status: str = field(default='on the ground', init=False)
 
     def __post_init__(self):
-        for flight in self._flights:
-            if self == flight:
-                raise ValueError(
-                    'You cannot create flight with same attributes!'
-                )
-        self._flights.append(self)
+        if self._flights.get(self._flight_id):
+            raise ValueError('You cannot create flight with same attributes!')
+        self._flights[self._flight_id] = self
 
     @property
     def status(self) -> str:
