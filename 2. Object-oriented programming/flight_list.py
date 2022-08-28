@@ -12,9 +12,7 @@ class Airplane:
     origin: str
     start_time: datetime = field(default=None)
     landing_time: datetime = field(default=None)
-    _flight_id: uuid = field(
-        default_factory=uuid.uuid4, init=False, repr=False
-    )
+    _flight_id: uuid = field(default_factory=uuid.uuid4, repr=False)
     _status: str = field(default='on the ground', init=False)
 
     def __post_init__(self):
