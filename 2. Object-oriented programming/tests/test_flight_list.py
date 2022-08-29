@@ -1,3 +1,4 @@
+import uuid
 from datetime import datetime, timedelta
 
 import pytest
@@ -66,6 +67,11 @@ def airplane_without_dates():
     del airplane
 
 
+@pytest.fixture
+def flight_id():
+    return uuid.uuid4()
+
+
 class TestAirplane:
     def test_status_without_start_time(self, airplane_without_start_time):
         assert airplane_without_start_time.status == 'on the ground'
@@ -86,13 +92,15 @@ class TestAirplane:
         with pytest.raises(ValueError):
             airplane_without_dates.flight_time()
 
-    def test_no_permission_for_creating_objects_with_the_same_attributes(self):
+    def test_no_permission_for_creating_objects_with_the_same_attributes(
+        self, flight_id
+    ):
         airplane = Airplane(
-            810, 'Berlin', 'Warsaw', start_time, landing_time, 99
+            810, 'Berlin', 'Warsaw', start_time, landing_time, flight_id
         )
         with pytest.raises(ValueError):
             airplane = Airplane(
-                810, 'Berlin', 'Warsaw', start_time, landing_time, 99
+                810, 'Berlin', 'Warsaw', start_time, landing_time, flight_id
             )
         del Airplane._flights[airplane.flight_id]
         del airplane
