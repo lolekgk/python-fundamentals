@@ -16,10 +16,10 @@ class Airplane:
     _status: str = field(default='on the ground', init=False)
 
     def __post_init__(self):
-        if self._flights.get(self._flight_id):
-            raise ValueError(
-                'You cannot create flight with the same attributes!'
-            )
+        if self._flights.get(self._flight_id) or not isinstance(
+            self._flight_id, uuid.UUID
+        ):
+            raise ValueError('You cannot create flight with those attributes!')
         self._flights[self._flight_id] = self
 
     @property
