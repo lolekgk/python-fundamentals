@@ -47,5 +47,5 @@ class Airplane:
             )
 
     @classmethod
-    def list_all_flights(cls) -> list:
+    def list_all_flights(cls) -> dict:
         return cls._flights
