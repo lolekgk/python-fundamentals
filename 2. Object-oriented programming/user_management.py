@@ -105,8 +105,7 @@ class AbstractUser(ABC):
         self, name: str, value: Union[str, date, uuid.UUID], user: AbstractUser
     ):
         if (
-            f'_{name}' in user.__dict__
-            and self.permission_lvl
+            self.permission_lvl
             >= RequiredPermissionLvl.SET_ALL_ATTRIBUTES.value
         ) or (self == user and name == 'email'):
             setattr(user, f'_{name}', value)
