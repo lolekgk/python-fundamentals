@@ -97,7 +97,7 @@ class AbstractUser(ABC):
             self.permission_lvl
             >= RequiredPermissionLvl.CHANGE_PERMISSION_LVL.value
         ):
-            self.permission_lvl = new_permission_lvl
+            user.permission_lvl = new_permission_lvl
         else:
             raise PermissionError
 
@@ -199,24 +199,3 @@ class Post:
     def content(self, value: str):
         self._content = value
         self._modification_date = datetime.now()
-
-
-user = User('Karol', 'Gajda', 'karol.gajda97@gmail.com', '21', 'male')
-user2 = User('Karol', 'Gajda', 'karol.gajda97@gmail.com', '21', 'male')
-red = Redactor('Karol', 'Gajda', 'karol.gajda97@gmail.com', '21', 'male')
-red2 = Redactor('Karol', 'Gajda', 'karol.gajda97@gmail.com', '21', 'male')
-
-admin = Admin('Karol', 'Gajda', 'admin', 'admin', 'admin')
-post = user.add_post('blalala')
-post2 = admin.add_post('blalla')
-# print(user < admin)
-# print(user < red)
-# print(hash(user))
-# print(hash(user2))
-# print(admin.__class__)
-# d = {red: 1}
-# print(d)
-# print(post <= user)
-user.change_permission_lvl(user, 20)
-print(Admin.permission_lvl)
-print(admin.permission_lvl)
