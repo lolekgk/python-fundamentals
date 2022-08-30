@@ -44,6 +44,16 @@ class AbstractUser(ABC):
         self._birth_date = birth_date
         self._gender = gender
 
+    def __eq__(self, other) -> bool:
+        if self.__class__ == other.__class__:
+            return (self._name + self._surname) == (
+                other._name + other._surname
+            )
+        return False
+
+    def __hash__(self) -> int:
+        return hash(self._id)
+
     @property
     def name(self) -> str:
         return self._name
@@ -127,7 +137,15 @@ class Post:
     def content(self) -> str:
         return self._content
 
+    @property
+    def creation_date(self) -> datetime:
+        return self._creation_date
+
+    @property
+    def modification_date(self) -> datetime:
+        return self._modification_date
+
     @content.setter
     def content(self, value: str):
         self._content = value
-        self.modification_date = datetime.now()
+        self._modification_date = datetime.now()
