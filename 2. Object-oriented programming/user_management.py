@@ -22,9 +22,10 @@ class PermissionLvl(Enum):
 
 
 class PermissionError(Exception):
-    def __init__(self):
-        default_message = "You do not have permission to do this."
-        super().__init__(default_message)
+    def __init__(
+        self, msg="You do not have permission to do this.", *args, **kwargs
+    ):
+        super().__init__(msg, *args, **kwargs)
 
 
 class AbstractUser(ABC):
