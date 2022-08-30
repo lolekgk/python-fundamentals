@@ -23,7 +23,10 @@ class PermissionLvl(Enum):
 
 class PermissionError(Exception):
     def __init__(
-        self, msg="You do not have permission to do this.", *args, **kwargs
+        self,
+        msg="You do not have permission to perform this action.",
+        *args,
+        **kwargs,
     ):
         super().__init__(msg, *args, **kwargs)
 
@@ -88,7 +91,7 @@ class AbstractUser(ABC):
     ):
         if self == user:
             raise PermissionError(
-                'You can not change your own permission_lvl.'
+                'You can not change your own permission level.'
             )
         if (
             self.permission_lvl
