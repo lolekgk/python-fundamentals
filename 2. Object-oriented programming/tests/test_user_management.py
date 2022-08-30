@@ -1,7 +1,7 @@
-from datetime import date, datetime
+from datetime import date
 
 import pytest
-from user_management import Admin, PermissionError, Post, Redactor, User
+from user_management import Admin, PermissionError, Redactor, User
 
 
 @pytest.fixture
