@@ -4,6 +4,7 @@ import uuid
 from abc import ABC
 from datetime import date, datetime
 from enum import Enum
+from functools import total_ordering
 from typing import Union
 
 
@@ -53,6 +54,12 @@ class AbstractUser(ABC):
 
     def __hash__(self) -> int:
         return hash(self._id)
+
+    def __gt__(self, other) -> bool:
+        return self.permission_lvl > other.permission_lvl
+
+    def __lt__(self, other) -> bool:
+        return self.permission_lvl < other.permission_lvl
 
     @property
     def name(self) -> str:
@@ -122,12 +129,21 @@ class Redactor(AbstractUser):
     permission_lvl = PermissionLvl.REDACTOR.value
 
 
+@total_ordering
 class Post:
     def __init__(self, content: str, author: AbstractUser):
         self._id = uuid.uuid4()
         self.content = content
         self._author = author
         self._creation_date = datetime.now()
+
+    def __eq__(self, other) -> bool:
+        if isinstance(other, Post):
+            return len(self.content) == len(other.content)
+
+    def __lt__(self, other) -> bool:
+        if isinstance(other, Post):
+            return len(self.content) < len(other.content)
 
     @property
     def author(self) -> AbstractUser:
