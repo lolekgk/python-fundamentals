@@ -179,21 +179,3 @@ class Post:
     def content(self, value: str):
         self._content = value
         self._modification_date = datetime.now()
-
-
-user = User('Karol', 'Gajda', 'karol.gajda97@gmail.com', '21', 'male')
-user2 = User('Karol', 'Gajda', 'karol.gajda97@gmail.com', '21', 'male')
-red = Redactor('Karol', 'Gajda', 'karol.gajda97@gmail.com', '21', 'male')
-red2 = Redactor('Karol', 'Gajda', 'karol.gajda97@gmail.com', '21', 'male')
-
-admin = Admin('Karol', 'Gajda', 'admin', 'admin', 'admin')
-post = user.add_post('blalala')
-post2 = admin.add_post('blalla')
-# print(user < admin)
-# print(user < red)
-# print(hash(user))
-# print(hash(user2))
-# print(admin.__class__)
-# d = {red: 1}
-# print(d)
-print(post <= user)
