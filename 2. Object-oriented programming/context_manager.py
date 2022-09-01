@@ -27,7 +27,7 @@ class FileHandler:
         if self.file_obj:
             self.file_obj.close()
 
-    def get_line(self):
+    def get_row(self):
         return self.file_obj.readline()
 
     def _path_validation(self, file_path: Path, allowed_extensions: list):
@@ -51,12 +51,3 @@ class FileHandler:
     def file_path(self, path: Path):
         self._path_validation(path, FileHandler._allowed_extensions)
         self._file_path = path
-
-
-# Usage example
-if __name__ == '__main__':
-    path = Path('example_path/file.csv')
-
-    with FileHandler(path) as file:
-        for i in range(3):
-            print(file.get_line())
