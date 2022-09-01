@@ -54,6 +54,13 @@ def valid_path_with_txt_suffix():
     del path
 
 
+@pytest.fixture
+def non_existing_path():
+    path = Path('/not_existing/path')
+    yield path
+    del path
+
+
 class TestFileHandler:
     def test_get_row_with_valid_path(
         self, create_fake_path_with_csv, valid_path_with_csv
@@ -89,5 +96,7 @@ class TestFileHandler:
             with FileHandler(valid_path_with_txt_suffix) as file:
                 file.get_row()
 
-
-# TODO test filepath exists
+    def test_get_row_non_existing_path(self, non_existing_path):
+        with pytest.raises(PathError):
+            with FileHandler(non_existing_path) as file:
+                file.get_row()
