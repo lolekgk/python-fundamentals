@@ -29,21 +29,21 @@ def fake_starting_time():
 def airplane(start_time, landing_time):
     airplane = Airplane(815, 'Berlin', 'Warsaw', start_time, landing_time)
     yield airplane
-    del Airplane._flights[airplane._flight_id], airplane
+    del Airplane._flights[airplane.flight_id], airplane
 
 
 @pytest.fixture
 def airplane_without_start_time(landing_time):
     airplane = Airplane(815, 'Berlin', 'Warsaw', landing_time=landing_time)
     yield airplane
-    del Airplane._flights[airplane._flight_id], airplane
+    del Airplane._flights[airplane.flight_id], airplane
 
 
 @pytest.fixture
 def airplane_without_landing_time(start_time):
     airplane = Airplane(815, 'Berlin', 'Warsaw', start_time)
     yield airplane
-    del Airplane._flights[airplane._flight_id], airplane
+    del Airplane._flights[airplane.flight_id], airplane
 
 
 @pytest.fixture
@@ -52,14 +52,14 @@ def flying_airplane(fake_starting_time, fake_landing_time):
         113, 'Madrid', 'Wroclaw', fake_starting_time, fake_landing_time
     )
     yield airplane
-    del Airplane._flights[airplane._flight_id], airplane
+    del Airplane._flights[airplane.flight_id], airplane
 
 
 @pytest.fixture
 def airplane_without_dates():
     airplane = Airplane(113, 'Madrid', 'Wroclaw')
     yield airplane
-    del Airplane._flights[airplane._flight_id], airplane
+    del Airplane._flights[airplane.flight_id], airplane
 
 
 @pytest.fixture
