@@ -76,13 +76,9 @@ class TestFileHandler:
         create_fake_path_with_empty_directory,
         valid_path_with_empty_dir,
     ):
-        with pytest.raises(PathError) as exc:
+        with pytest.raises(PathError):
             with FileHandler(valid_path_with_empty_dir) as file:
                 file.get_row()
-        assert (
-            str(exc.value)
-            == 'You need to provide a file_path as Path object, which points to .csv file.'
-        )
 
     def test_get_row_with_invalid_path(self):
         with pytest.raises(PathError):
