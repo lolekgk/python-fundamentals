@@ -47,13 +47,5 @@ class Airplane:
             )
 
     @classmethod
-<<<<<<< HEAD
-    def list_all_flights(cls):
-        return cls.flights
-
-
-# test
-=======
     def list_all_flights(cls) -> dict:
         return cls._flights
->>>>>>> main
