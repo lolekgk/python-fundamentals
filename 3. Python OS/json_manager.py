@@ -1,4 +1,4 @@
-from tokenize import Single
+import json
 
 
 class Singleton(type):
@@ -12,14 +12,28 @@ class Singleton(type):
 
 
 class JsonManager(metaclass=Singleton):
-    def __init__(self):
+    def __init__(self, path=None):
+        self.path = path
+
+    def read_file(self, path=None):
+        # json.load() -> load data from a file
+        with open(path) as json_file:
+            self.data = json.load(json_file)
+
+    def create_file(self, data: dict):
+        # json.dump() -> write data to a file
+        with open(self.path, 'w') as json_file:
+            json.dump(data, json_file)
+
+    def update_file(self, path):
+        # json.load()
+        # json.dump()
         pass
 
-    def create(self):
+    def delete_file(self, path):
         pass
 
-    def update_file(self):
-        pass
 
-    def delete_file(self):
-        pass
+# jsonstring = '{"name": "erik", "age": 38, "married": true}'
+# data = json.loads(jsonstring) -> decoding JSON -> json to python, dict
+# json.dumps(data, indent=4) -> encoding JSON -> python to json
