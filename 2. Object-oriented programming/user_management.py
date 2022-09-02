@@ -162,7 +162,7 @@ class Post:
 
     def __eq__(self, other) -> bool:
         if isinstance(other, Post):
-            return len(self.content) == len(other.content)
+            return self.content == other.content
         raise TypeError(
             self.comparsion_error_str.format(
                 self.__class__.__name__, other.__class__.__name__
