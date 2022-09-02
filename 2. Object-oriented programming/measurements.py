@@ -9,7 +9,15 @@ class MeasurementType(Enum):
     VOLUME = 'volume'
 
 
+class ComparsionError(TypeError):
+    pass
+
+
 class Unit(ABC):
+    comparsion_error_str = (
+        "Comparsion is not supported between instances of {} and {}."
+    )
+
     @property
     @abstractmethod
     def unit_symbol(self):
@@ -29,7 +37,9 @@ class Unit(ABC):
         if self.type == other.type:
             return isclose(self.to_si(), other.to_si(), rel_tol=0.00001)
         raise TypeError(
-            f"'==' not supported between instances of '{type(self).__name__}' and '{type(other).__name__}'"
+            self.comparsion_error_str.format(
+                self.__class__.__name__, other.__class__.__name__
+            ),
         )
 
     def __ge__(self, other):
@@ -39,7 +49,9 @@ class Unit(ABC):
                 or self.to_si() > other.to_si()
             )
         raise TypeError(
-            f"'>=' not supported between instances of '{type(self).__name__}' and '{type(other).__name__}'"
+            self.comparsion_error_str.format(
+                self.__class__.__name__, other.__class__.__name__
+            ),
         )
 
     def __le__(self, other):
@@ -49,7 +61,9 @@ class Unit(ABC):
                 or self.to_si() < other.to_si()
             )
         raise TypeError(
-            f"'<=' not supported between instances of '{type(self).__name__}' and '{type(other).__name__}'"
+            self.comparsion_error_str.format(
+                self.__class__.__name__, other.__class__.__name__
+            ),
         )
 
     def __gt__(self, other):
@@ -59,7 +73,9 @@ class Unit(ABC):
                 and self.to_si() > other.to_si()
             )
         raise TypeError(
-            f"'>' not supported between instances of '{type(self).__name__}' and '{type(other).__name__}'"
+            self.comparsion_error_str.format(
+                self.__class__.__name__, other.__class__.__name__
+            ),
         )
 
     def __lt__(self, other):
@@ -69,7 +85,9 @@ class Unit(ABC):
                 and self.to_si() < other.to_si()
             )
         raise TypeError(
-            f"'<' not supported between instances of '{type(self).__name__}' and '{type(other).__name__}'"
+            self.comparsion_error_str.format(
+                self.__class__.__name__, other.__class__.__name__
+            ),
         )
 
 

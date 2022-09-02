@@ -4,22 +4,30 @@ from person import Address, Person
 
 @pytest.fixture
 def address():
-    return Address('Kwiatowa 10/2', 'Warszawa', 'Mazowieckie', 30222)
+    address = Address('Kwiatowa 10/2', 'Warszawa', 'Mazowieckie', 30222)
+    yield address
+    del address
 
 
 @pytest.fixture
 def person():
-    return Person('Joshua', 'Kowalski', 'Brad')
+    person = Person('Joshua', 'Kowalski', 'Brad')
+    yield person
+    del person
 
 
 @pytest.fixture
 def test_friend1():
-    return Person('Mark', 'Frame')
+    person = Person('Mark', 'Frame')
+    yield person
+    del person
 
 
 @pytest.fixture
 def test_friend2():
-    return Person('Rob', 'Holding')
+    person = Person('Rob', 'Holding')
+    yield person
+    del person
 
 
 class TestPerson:

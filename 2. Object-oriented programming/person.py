@@ -7,7 +7,7 @@ class Person:
         first_name: str,
         surname: str,
         second_name: str = None,
-        address: type[Address] = None,
+        address: Address = None,
     ):
         self.first_name = first_name
         self.surname = surname
@@ -41,7 +41,7 @@ class Person:
             ]
         )
 
-    def _validate_user_input(self, user_input, var_name):
+    def _validate_user_input(self, user_input: str, var_name: str):
         if not isinstance(user_input, str):
             raise TypeError(
                 f'The value of "{var_name}" should be of type str.'
@@ -60,7 +60,7 @@ class Person:
         return self._acquaintances
 
     @property
-    def address(self) -> type[Address]:
+    def address(self) -> Address:
         return self._address
 
     @property
@@ -91,13 +91,13 @@ class Person:
         Person._validate_user_input(self, surname, 'surname')
         self._surname = surname
 
-    def add_acquaintance(self, acquaintance: type[Person]):
+    def add_acquaintance(self, acquaintance: Person):
         if not isinstance(acquaintance, Person):
             raise TypeError('Acquaintance should be of type Person.')
         elif acquaintance not in self._acquaintances:
             self._acquaintances.append(acquaintance)
 
-    def delete_acquaintance(self, acquaintance: type[Person]):
+    def delete_acquaintance(self, acquaintance: Person):
         if acquaintance in self._acquaintances:
             self._acquaintances.remove(acquaintance)
 
@@ -135,7 +135,7 @@ class Address:
             ]
         )
 
-    def _validate_user_input(self, user_input, var_name):
+    def _validate_user_input(self, user_input: str, var_name: str):
         if not isinstance(user_input, str):
             raise TypeError(
                 f'The value of "{var_name}" should be of type str.'
