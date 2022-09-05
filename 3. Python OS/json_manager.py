@@ -1,3 +1,5 @@
+from __future__ import annotations
+
 import json
 import os
 from pathlib import Path
@@ -31,26 +33,35 @@ class JsonManager(metaclass=Singleton):
     def __init__(self, path: Path = None):
         self.path = path
 
-    def read(self, file_path: Path) -> dict:
+    def read(self, file_path: Path = None) -> dict:
+        if file_path is None:
+            file_path = self.path
         self._path_validation(file_path)
         with open(file_path) as json_file:
             return json.load(json_file)
 
-    def write(self, data: dict, path: Path, update=None):
+    def write(
+        self, data: dict, path: Path = None, update: bool = None
+    ) -> JsonManager:
+        if path is None:
+            path = self.path
         if update is None:
             validate_filename(path.stem)
             self._suffix_validation(path)
-
         with open(path, 'w') as json_file:
             json.dump(data, json_file, indent=4)
         return self
 
-    def update_file(self, data: dict, file_path: Path):
+    def update_file(self, data: dict, file_path: Path = None) -> JsonManager:
+        if file_path is None:
+            file_path = self.path
         self.read(file_path)
         self.write(data, file_path, update=True)
         return self
 
-    def delete_file(self, file_path: Path):
+    def delete_file(self, file_path: Path = None) -> JsonManager:
+        if file_path is None:
+            file_path = self.path
         self._path_validation(file_path)
         try:
             os.remove(file_path)
@@ -70,3 +81,13 @@ class JsonManager(metaclass=Singleton):
     def _suffix_validation(self, file_path: Path):
         if not file_path.suffix in JsonManager._allowed_extensions:
             raise PathError
+
+    @property
+    def path(self) -> Path:
+        return self._path
+
+    @path.setter
+    def path(self, path: Path):
+        if path is not None:
+            self._path_validation(path)
+        self._path = path
