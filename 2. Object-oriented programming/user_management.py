@@ -21,7 +21,7 @@ class PermissionLvl(Enum):
     ADMIN = 10
 
 
-class PermissionError(Exception):
+class ApprovalError(Exception):
     def __init__(
         self,
         msg="You do not have permission to perform this action.",
@@ -90,7 +90,7 @@ class AbstractUser(ABC):
         self, user: AbstractUser, new_permission_lvl: int
     ):
         if self == user:
-            raise PermissionError(
+            raise ApprovalError(
                 'You can not change your own permission level.'
             )
         if (
@@ -99,7 +99,7 @@ class AbstractUser(ABC):
         ):
             user.permission_lvl = new_permission_lvl
         else:
-            raise PermissionError
+            raise ApprovalError
 
     def change_attribute(
         self, name: str, value: Union[str, date, uuid.UUID], user: AbstractUser
@@ -110,7 +110,7 @@ class AbstractUser(ABC):
         ) or (self == user and name == 'email'):
             setattr(user, f'_{name}', value)
         else:
-            raise PermissionError
+            raise ApprovalError
 
     def add_post(self, content: str) -> Post:
         post = Post(content, author=self)
@@ -124,7 +124,7 @@ class AbstractUser(ABC):
         ):
             post.content = new_content
         else:
-            raise PermissionError
+            raise ApprovalError
 
     def delete_post(self, post: Post):
         if (
@@ -133,7 +133,7 @@ class AbstractUser(ABC):
         ):
             del post.author._posts[post._id], post
         else:
-            raise PermissionError
+            raise ApprovalError
 
 
 class User(AbstractUser):
