@@ -104,5 +104,5 @@ class TestAirplane:
         assert len(airplane.list_all_flights()) == len(
             flying_airplane.list_all_flights()
         )
-        for flight in airplane.list_all_flights().values():
+        for flight in airplane.list_all_flights():
             assert isinstance(flight, Airplane)
