@@ -23,7 +23,7 @@ class TestEmailBuilder:
         assert builder.email.html == ''
 
     def test_add_attribute_that_is_not_allowed(self, builder):
-        with pytest.raises(ValueError):
+        with pytest.raises(AttributeError):
             builder.add_attribute('footer', 'Bye')
 
     def test_add_some_part_of_the_allowed_attributes(self, builder):
