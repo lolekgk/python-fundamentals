@@ -1,7 +1,7 @@
 from datetime import date
 
 import pytest
-from user_management import Admin, PermissionError, Redactor, User
+from user_management import Admin, ApprovalError, Redactor, User
 
 
 @pytest.fixture
@@ -115,7 +115,7 @@ class TestUser:
     def test_user_can_not_edit_other_users_posts(
         self, test_user, test_redactors_post
     ):
-        with pytest.raises(PermissionError):
+        with pytest.raises(ApprovalError):
             test_user.edit_post(test_redactors_post, 'New content')
 
     def test_user_can_delete_his_own_post(self, test_user, test_users_post):
@@ -126,7 +126,7 @@ class TestUser:
     def test_user_can_not_delete_other_users_post(
         self, test_user, test_redactors_post
     ):
-        with pytest.raises(PermissionError):
+        with pytest.raises(ApprovalError):
             test_user.delete_post(test_redactors_post)
 
     def test_user_can_change_his_own_email(self, test_user):
@@ -134,31 +134,31 @@ class TestUser:
         assert test_user.email == 'new.email@gmail.com'
 
     def test_user_can_not_change_name(self, test_user):
-        with pytest.raises(PermissionError):
+        with pytest.raises(ApprovalError):
             test_user.change_attribute('name', 'Bob', test_user)
 
     def test_user_can_not_change_own_surnname(self, test_user):
-        with pytest.raises(PermissionError):
+        with pytest.raises(ApprovalError):
             test_user.change_attribute('surname', 'Marley', test_user)
 
     def test_user_can_not_change_own_birth_date(self, test_user):
-        with pytest.raises(PermissionError):
+        with pytest.raises(ApprovalError):
             test_user.change_attribute(
                 'birth_date', date(2020, 1, 2), test_user
             )
 
     def test_user_can_not_change_own_gender(self, test_user):
-        with pytest.raises(PermissionError):
+        with pytest.raises(ApprovalError):
             test_user.change_attribute('gender', 'female', test_user)
 
     def test_user_can_not_set_own_new_attribute(self, test_user):
-        with pytest.raises(PermissionError):
+        with pytest.raises(ApprovalError):
             test_user.change_attribute('second_name', 'Francis', test_user)
 
     def test_user_can_not_change_others_attributes(
         self, test_user, second_test_user
     ):
-        with pytest.raises(PermissionError):
+        with pytest.raises(ApprovalError):
             test_user.change_attribute('gender', 'female', second_test_user)
 
     def test_compare_different_user_classes(
@@ -172,13 +172,13 @@ class TestUser:
         del test_dict
 
     def test_user_can_not_change_his_own_permission_lvl(self, test_user):
-        with pytest.raises(PermissionError):
+        with pytest.raises(ApprovalError):
             test_user.change_permission_lvl(test_user, 10)
 
     def test_user_can_not_change_others_permission_lvl(
         self, test_user, second_test_user
     ):
-        with pytest.raises(PermissionError):
+        with pytest.raises(ApprovalError):
             test_user.change_permission_lvl(second_test_user, 10)
 
 
@@ -210,7 +210,7 @@ class TestRedactor:
     def test_redactor_can_not_delete_other_users_post(
         self, test_redactor, test_users_post
     ):
-        with pytest.raises(PermissionError):
+        with pytest.raises(ApprovalError):
             test_redactor.delete_post(test_users_post)
 
     def test_redactor_can_change_his_own_email(self, test_redactor):
@@ -220,25 +220,25 @@ class TestRedactor:
         assert test_redactor.email == 'new.email@gmail.com'
 
     def test_redactor_can_not_change_name(self, test_redactor):
-        with pytest.raises(PermissionError):
+        with pytest.raises(ApprovalError):
             test_redactor.change_attribute('name', 'Bob', test_redactor)
 
     def test_redactor_can_not_change_own_surnname(self, test_redactor):
-        with pytest.raises(PermissionError):
+        with pytest.raises(ApprovalError):
             test_redactor.change_attribute('surname', 'Marley', test_redactor)
 
     def test_redactor_can_not_change_own_birth_date(self, test_redactor):
-        with pytest.raises(PermissionError):
+        with pytest.raises(ApprovalError):
             test_redactor.change_attribute(
                 'birth_date', date(2020, 1, 2), test_redactor
             )
 
     def test_redactor_can_not_change_own_gender(self, test_redactor):
-        with pytest.raises(PermissionError):
+        with pytest.raises(ApprovalError):
             test_redactor.change_attribute('gender', 'female', test_redactor)
 
     def test_redactor_can_not_set_own_new_attribute(self, test_redactor):
-        with pytest.raises(PermissionError):
+        with pytest.raises(ApprovalError):
             test_redactor.change_attribute(
                 'second_name', 'Francis', test_redactor
             )
@@ -246,7 +246,7 @@ class TestRedactor:
     def test_redactor_can_not_change_others_attributes(
         self, test_redactor, second_test_user
     ):
-        with pytest.raises(PermissionError):
+        with pytest.raises(ApprovalError):
             test_redactor.change_attribute(
                 'gender', 'female', second_test_user
             )
@@ -259,13 +259,13 @@ class TestRedactor:
     def test_redactor_can_not_change_his_own_permission_lvl(
         self, test_redactor
     ):
-        with pytest.raises(PermissionError):
+        with pytest.raises(ApprovalError):
             test_redactor.change_permission_lvl(test_redactor, 10)
 
     def test_redactor_can_not_change_others_permission_lvl(
         self, test_redactor, second_test_user
     ):
-        with pytest.raises(PermissionError):
+        with pytest.raises(ApprovalError):
             test_redactor.change_permission_lvl(second_test_user, 10)
 
 
@@ -363,7 +363,7 @@ class TestAdmin:
         assert second_test_admin.permission_lvl == 1
 
     def test_admin_can_not_change_his_own_permission_lvl(self, test_admin):
-        with pytest.raises(PermissionError):
+        with pytest.raises(ApprovalError):
             test_admin.change_permission_lvl(test_admin, 10)
 
 
