@@ -13,16 +13,16 @@ class EmailBuilder(IEmailBuilder):
         self.email = Email()
 
     def add_attribute(self, name, value):
-        if name in self.email.__dict__:
-            setattr(self.email, name, value)
-            return self
-        raise ValueError('You cannot add attribute with provided name.')
+        setattr(self.email, name, value)
+        return self
 
     def get_result(self):
         return self.email
 
 
 class Email:
+    __slots__ = ('from_', 'to', 'title', 'cc', 'bcc', 'html')
+
     def __init__(self, from_="", to="", title="", cc=None, bcc=None, html=""):
         self.from_ = from_
         self.to = to
