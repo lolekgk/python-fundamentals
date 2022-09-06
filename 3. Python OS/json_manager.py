@@ -3,6 +3,7 @@ from __future__ import annotations
 import json
 import os
 from pathlib import Path
+from typing import Generator
 
 from pathvalidate import validate_filename
 
@@ -10,7 +11,7 @@ from pathvalidate import validate_filename
 class PathError(Exception):
     def __init__(
         self,
-        msg='You need to provide valid path with .json file.',
+        msg='You need to provide valid path with .json file to perform this action.',
         *args,
         **kwargs,
     ):
@@ -68,6 +69,25 @@ class JsonManager(metaclass=Singleton):
         except OSError as er:
             print(er)
         return self
+
+    def scan_path(self, path: Path = None, depth: int = None) -> Generator:
+        """Recursively list files ending with allowed extensions in all folders in given location
+        or up to a certain depth - if provided"""
+        if path is None:
+            path = self.path
+
+        if depth is None:
+            for path in Path(path).rglob('*.json'):
+                yield path
+
+        if depth is not None:
+            depth -= 1
+            with os.scandir(path) as it:
+                for entry in it:
+                    if entry.name.endswith('.json') and entry.is_file():
+                        yield Path(entry.path)
+                    if entry.is_dir() and depth > 0:
+                        yield from self._walk(entry.path, depth)
 
     def _path_validation(self, file_path: Path):
         if not (
