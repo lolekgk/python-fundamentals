@@ -47,8 +47,8 @@ class JsonManager(metaclass=Singleton):
         if path is None:
             path = self.path
         if update is None:
-            validate_filename(path.stem)
             self._suffix_validation(path)
+            validate_filename(path.stem)
         with open(path, 'w') as json_file:
             json.dump(data, json_file, indent=4)
         return self
@@ -99,7 +99,10 @@ class JsonManager(metaclass=Singleton):
             raise PathError
 
     def _suffix_validation(self, file_path: Path):
-        if not file_path.suffix in JsonManager._allowed_extensions:
+        if (
+            not isinstance(file_path, Path)
+            or not file_path.suffix in JsonManager._allowed_extensions
+        ):
             raise PathError
 
     @property
