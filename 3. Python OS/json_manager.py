@@ -82,12 +82,14 @@ class JsonManager(metaclass=Singleton):
 
         if depth is not None:
             depth -= 1
-            with os.scandir(path) as it:
-                for entry in it:
-                    if entry.name.endswith('.json') and entry.is_file():
-                        yield Path(entry.path)
-                    if entry.is_dir() and depth > 0:
-                        yield from self.scan_path(Path(entry.path), depth)
+            for item in path.iterdir():
+                if (
+                    item.suffix in JsonManager._allowed_extensions
+                    and item.is_file()
+                ):
+                    yield item
+                if item.is_dir() and depth > 0:
+                    yield from self.scan_path(item, depth)
 
     def _json_path_validation(self, file_path: Path):
         if not (
