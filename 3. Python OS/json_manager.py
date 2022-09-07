@@ -29,7 +29,7 @@ class Singleton(type):
 
 
 class JsonManager(metaclass=Singleton):
-    _allowed_extensions = ['.json']
+    _allowed_extension = '.json'
 
     def __init__(self, path: Path = None):
         self.path = path
@@ -77,14 +77,14 @@ class JsonManager(metaclass=Singleton):
             path = self.path
 
         if depth is None:
-            for tree_path in path.rglob('*.json'):
+            for tree_path in path.rglob(f'*{JsonManager._allowed_extension}'):
                 yield tree_path
 
         if depth is not None:
             depth -= 1
             for item in path.iterdir():
                 if (
-                    item.suffix in JsonManager._allowed_extensions
+                    item.suffix == JsonManager._allowed_extension
                     and item.is_file()
                 ):
                     yield item
@@ -96,20 +96,20 @@ class JsonManager(metaclass=Singleton):
             isinstance(file_path, Path)
             and file_path.exists()
             and file_path.is_file()
-            and file_path.suffix in JsonManager._allowed_extensions
+            and file_path.suffix == JsonManager._allowed_extension
         ):
             raise PathError
 
     def _suffix_validation(self, file_path: Path):
         if (
             not isinstance(file_path, Path)
-            or not file_path.suffix in JsonManager._allowed_extensions
+            or not file_path.suffix == JsonManager._allowed_extension
         ):
             raise PathError
 
     @property
     def allowed_extensions(self) -> list:
-        return self._allowed_extensions
+        return self._allowed_extension
 
     @property
     def path(self) -> Path:
