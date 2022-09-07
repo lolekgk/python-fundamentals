@@ -76,11 +76,6 @@ class JsonManager(metaclass=Singleton):
         if path is None:
             path = self.path
 
-        if not isinstance(path, Path):
-            raise PathError(
-                'You need to provide valid path to provide this action.'
-            )
-
         if depth is None:
             for tree_path in path.rglob('*.json'):
                 yield tree_path
