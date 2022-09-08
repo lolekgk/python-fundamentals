@@ -9,6 +9,8 @@ from folder_manager import FolderManager
 def create_fake_path(fs):
     fs.create_dir('/test/')
     fs.create_dir('/test/x1')
+    fs.create_dir('/test/x1/xx1')
+    fs.create_dir('/test/x1/xx2')
     fs.create_dir('/test/x2')
     fs.create_dir('/test/x3')
     fs.create_dir('/another_test/test1')
@@ -41,6 +43,57 @@ def folder_manager():
     fm = FolderManager()
     yield fm
     del fm
+
+
+@pytest.fixture
+def valid_tree():
+    tree = {
+        'name': 'example',
+        'type': 'folder',
+        'content': [
+            {
+                'name': 'subfolder_1',
+                'type': 'folder',
+                'content': [
+                    {'name': 'subfolder_1_1', 'type': 'folder', 'content': []},
+                    {'name': 'subfolder_1_2', 'type': 'folder', 'content': []},
+                ],
+            },
+            {
+                'name': 'subfolder_2',
+                'type': 'folder',
+                'content': [{'name': 'test_file_3.txt', 'type': 'file'}],
+            },
+        ],
+    }
+    yield tree
+    del tree
+
+
+@pytest.fixture
+def invalid_tree():
+    # invalid key name 'cont'
+    tree = {
+        'name': 'example',
+        'type': 'folder',
+        'content': [
+            {
+                'name': 'subfolder_1',
+                'type': 'folder',
+                'content': [
+                    {'name': 'subfolder_1_1', 'type': 'folder', 'content': []},
+                    {'name': 'subfolder_1_2', 'type': 'folder', 'cont': []},
+                ],
+            },
+            {
+                'name': 'subfolder_2',
+                'type': 'folder',
+                'content': [{'name': 'test_file_3.txt', 'type': 'file'}],
+            },
+        ],
+    }
+    yield tree
+    del tree
 
 
 class TestFolderManager:
@@ -77,3 +130,58 @@ class TestFolderManager:
     ):
         folder_manager.delete_folder(existing_path)
         assert not existing_path.exists()
+
+    def test_create_folder_tree_with_valid_tree(
+        self, create_fake_path, valid_tree, main_path, folder_manager
+    ):
+        folder_manager.create_folder_tree(main_path, valid_tree)
+        assert Path('/test/example/subfolder_1/subfolder_1_1').exists()
+        assert Path('/test/example/subfolder_1/subfolder_1_2').exists()
+        assert Path('/test/example/subfolder_2/').exists()
+
+    def test_create_folder_with_invalid_tree_structure(
+        self, create_fake_path, invalid_tree, main_path, folder_manager
+    ):
+        with pytest.raises(ValueError):
+            folder_manager.create_folder_tree(main_path, invalid_tree)
+
+    def test_create_folder_with_invalid_tree_type(
+        self, create_fake_path, main_path, folder_manager
+    ):
+        with pytest.raises(TypeError):
+            folder_manager.create_folder_tree(main_path, 1)
+
+    def test_path_to_dict(self, create_fake_path, main_path, folder_manager):
+        result = folder_manager.path_to_dict(main_path)
+        assert result == {
+            'name': 'test',
+            'type': 'folder',
+            'content': [
+                {
+                    'name': 'x1',
+                    'type': 'folder',
+                    'content': [
+                        {
+                            'name': 'xx1',
+                            'type': 'folder',
+                            'content': [],
+                        },
+                        {
+                            'name': 'xx2',
+                            'type': 'folder',
+                            'content': [],
+                        },
+                    ],
+                },
+                {
+                    'name': 'x2',
+                    'type': 'folder',
+                    'content': [],
+                },
+                {
+                    'name': 'x3',
+                    'type': 'folder',
+                    'content': [],
+                },
+            ],
+        }
