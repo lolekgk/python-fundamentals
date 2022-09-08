@@ -32,6 +32,8 @@ class CSVManager(metaclass=Singleton):
         pass
 
     def scan_path(self, path: Path = None, depth: int = None) -> Generator:
+        """Recursively list files ending with .csv suffix in all folders in given location
+        or up to a certain depth - if provided"""
         if path is None:
             path = self.path
 
