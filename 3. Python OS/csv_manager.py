@@ -41,18 +41,25 @@ class CSVManager(metaclass=Singleton):
             for row in reader:
                 print(' '.join(row))
 
-    def write(self, path: Path, data: list[dict]):
+    def write(
+        self, path: Path, rows: list[dict], header: list[str] = None
+    ) -> CSVManager:
         if path is None:
             path = self.path
 
         with open(path, 'w', newline='') as csvfile:
-            for row in data:
+            writer = csv.writer(csvfile)
+            if header is not None:
+                writer.writerow(header)
+            for row in rows:
                 if isinstance(row, dict):
-                    pass
+                    writer.writerow(list(row.values()))
+        return self
 
     def delete_file(self, path: Path = None) -> CSVManager:
         if path is None:
             path = self.path
+
         self._csv_path_validation(path)
         try:
             os.remove(path)
