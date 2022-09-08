@@ -32,30 +32,14 @@ class FolderManager:
             print(error)
 
     def create_folder_tree(self, path, folder_tree: dict):
-        ...
-
-
-{
-    'name': 'test',
-    'type': 'folder',
-    'content': [
-        {
-            'name': 'subfolder_1',
-            'type': 'folder',
-            'content': [
-                {'name': 'test_file_1.txt', 'type': 'file'},
-                {'name': 'test_file_2.txt', 'type': 'file'},
-            ],
-        },
-        {
-            'name': 'subfolder_2',
-            'type': 'folder',
-            'content': [{'name': 'test_file_3.txt', 'type': 'file'}],
-        },
-    ],
-}
-fm = FolderManager()
-path = Path('/Users/karolgajda/test/test')
-print(fm.list_content(path))
-dict = {'folder1': ['child1', 'child2']}
-print(len(os.listdir(path)) != 0)
+        """Create folder tree in your OS based on provided tree argument of
+        dictionary type.
+        Example tree structure:
+        example_tree = {'name': 'test2', 'type': 'folder', 'content': [{}, {}]}"""
+        if folder_tree['type'] == 'folder':
+            path = path / folder_tree['name']
+        if isinstance(folder_tree.get('content'), list):
+            for item in folder_tree['content']:
+                if item['type'] == 'folder':
+                    self.create_folder_tree(path, item)
+        self.create_folder(path)
