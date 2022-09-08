@@ -45,6 +45,7 @@ class FolderManager:
         self.create_folder(path)
 
     def path_to_dict(self, path: Path) -> dict:
+        """Create dict representing directory structure in given path"""
         tree = {'name': path.name}
         if path.is_dir():
             tree['type'] = 'folder'
