@@ -36,6 +36,7 @@ class FolderManager:
         dictionary type.
         Example tree structure:
         example_tree = {'name': 'test2', 'type': 'folder', 'content': [{}, {}]}"""
+        self._is_valid_tree(tree)
         if tree['type'] == 'folder':
             path = path / tree['name']
         if isinstance(tree.get('content'), list):
@@ -55,3 +56,15 @@ class FolderManager:
         if path.is_file():
             tree['type'] = 'file'
         return tree
+
+    def _is_valid_tree(self, tree):
+        if not isinstance(tree, dict) or not all(
+            item in tree.keys() for item in ['name', 'type', 'content']
+        ):
+            raise ValueError(
+                'You need to provide valid tree structure of dict type.'
+            )
+        if tree.get('content'):
+            for item in tree['content']:
+                if item.get('type') == 'folder':
+                    self._is_valid_tree(item)
