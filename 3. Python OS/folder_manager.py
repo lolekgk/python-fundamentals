@@ -68,24 +68,3 @@ class FolderManager:
             for item in tree['content']:
                 if item.get('type') == 'folder':
                     self._is_valid_tree(item)
-
-
-tree = {
-    'name': 'example',
-    'type': 'folder',
-    'content': [
-        {
-            'name': 'subfolder_1',
-            'type': 'folder',
-            'content': [
-                {'name': 'subfolder_1_1', 'type': 'folder', 'content': []},
-                {'name': 'subfolder_1_2', 'type': 'folder', 'content': []},
-            ],
-        },
-        {
-            'name': 'subfolder_2',
-            'type': 'folder',
-            'content': [{'name': 'test_file_3.txt', 'type': 'file'}],
-        },
-    ],
-}
