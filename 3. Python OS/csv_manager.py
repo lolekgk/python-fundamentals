@@ -1,4 +1,5 @@
 from pathlib import Path
+from typing import Generator
 
 
 class Singleton(type):
@@ -12,5 +13,26 @@ class Singleton(type):
 
 
 class CSVManager(metaclass=Singleton):
-    def __init__(self, path: Path):
+    _allowed_extension = '.csv'
+
+    def __init__(self, path: Path = None):
         self.path = path
+
+    def scan_path(self, path: Path = None, depth: int = None) -> Generator:
+        if path is None:
+            path = self.path
+
+        if depth is None:
+            for csv_path in path.rglob(f"*{CSVManager._allowed_extension}"):
+                yield csv_path
+
+        if depth is not None:
+            depth -= 1
+            for child in path.iterdir():
+                if (
+                    child.is_file()
+                    and child.suffix == CSVManager._allowed_extension
+                ):
+                    yield child
+                if child.is_dir() and depth > 0:
+                    yield from self.scan_path(child, depth)
