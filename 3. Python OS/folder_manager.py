@@ -31,15 +31,15 @@ class FolderManager:
         except OSError as error:
             print(error)
 
-    def create_folder_tree(self, path: Path, folder_tree: dict):
+    def create_folder_tree(self, path: Path, tree: dict):
         """Create folder tree in your OS based on provided tree argument of
         dictionary type.
         Example tree structure:
         example_tree = {'name': 'test2', 'type': 'folder', 'content': [{}, {}]}"""
-        if folder_tree['type'] == 'folder':
-            path = path / folder_tree['name']
-        if isinstance(folder_tree.get('content'), list):
-            for item in folder_tree['content']:
+        if tree['type'] == 'folder':
+            path = path / tree['name']
+        if isinstance(tree.get('content'), list):
+            for item in tree['content']:
                 if item['type'] == 'folder':
                     self.create_folder_tree(path, item)
         self.create_folder(path)
