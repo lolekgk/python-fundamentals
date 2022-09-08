@@ -1,6 +1,19 @@
+from __future__ import annotations
+
 import csv
+import os
 from pathlib import Path
 from typing import Generator
+
+
+class PathError(Exception):
+    def __init__(
+        self,
+        msg='You need to provide valid path with .csv file to perform this action',
+        *args,
+        **kwargs,
+    ):
+        super().__init__(msg, *args, **kwargs)
 
 
 class Singleton(type):
@@ -28,8 +41,24 @@ class CSVManager(metaclass=Singleton):
             for row in reader:
                 print(' '.join(row))
 
-    def write():
-        pass
+    def write(self, path: Path, data: list[dict]):
+        if path is None:
+            path = self.path
+
+        with open(path, 'w', newline='') as csvfile:
+            for row in data:
+                if isinstance(row, dict):
+                    pass
+
+    def delete_file(self, path: Path = None) -> CSVManager:
+        if path is None:
+            path = self.path
+        self._csv_path_validation(path)
+        try:
+            os.remove(path)
+        except OSError as err:
+            print(err)
+        return self
 
     def scan_path(self, path: Path = None, depth: int = None) -> Generator:
         """Recursively list files ending with .csv suffix in all folders in given location
@@ -51,3 +80,12 @@ class CSVManager(metaclass=Singleton):
                     yield child
                 if child.is_dir() and depth > 0:
                     yield from self.scan_path(child, depth)
+
+    def _csv_path_validation(self, file_path: Path):
+        if not (
+            isinstance(file_path, Path)
+            and file_path.exists()
+            and file_path.is_file()
+            and file_path.suffix == CSVManager._allowed_extension
+        ):
+            raise PathError
