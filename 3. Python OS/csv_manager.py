@@ -1,3 +1,4 @@
+import csv
 from pathlib import Path
 from typing import Generator
 
@@ -17,6 +18,18 @@ class CSVManager(metaclass=Singleton):
 
     def __init__(self, path: Path = None):
         self.path = path
+
+    def read(self, path: Path = None):
+        if path is None:
+            path = self.path
+
+        with open(path, newline='', encoding='unicode_escape') as csvfile:
+            reader = csv.reader(csvfile, delimiter=' ', quotechar='|')
+            for row in reader:
+                print(' '.join(row))
+
+    def write():
+        pass
 
     def scan_path(self, path: Path = None, depth: int = None) -> Generator:
         if path is None:
