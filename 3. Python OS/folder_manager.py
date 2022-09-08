@@ -58,13 +58,38 @@ class FolderManager:
         return tree
 
     def _is_valid_tree(self, tree):
-        if not isinstance(tree, dict) or not all(
+        if not isinstance(tree, dict):
+            raise TypeError('You need to provide tree of dict type.')
+        if not all(
             item in tree.keys() for item in ['name', 'type', 'content']
         ):
-            raise ValueError(
-                'You need to provide valid tree structure of dict type.'
-            )
+            raise ValueError('You need to provide valid tree structure.')
         if tree.get('content'):
             for item in tree['content']:
                 if item.get('type') == 'folder':
                     self._is_valid_tree(item)
+
+
+tree = {
+    'name': 'example',
+    'type': 'folder',
+    'content': [
+        {
+            'name': 'subfolder_1',
+            'type': 'folder',
+            'content': [
+                {'name': 'subfolder_1_1', 'type': 'folder', 'content': []},
+                {'name': 'subfolder_1_2', 'type': 'folder', 'content': []},
+            ],
+        },
+        {
+            'name': 'subfolder_2',
+            'type': 'folder',
+            'content': [{'name': 'test_file_3.txt', 'type': 'file'}],
+        },
+    ],
+}
+
+# fm = FolderManager()
+# path = Path('11241')
+# fm._is_valid_tree(tree)
