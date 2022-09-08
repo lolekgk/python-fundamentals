@@ -89,7 +89,3 @@ tree = {
         },
     ],
 }
-
-# fm = FolderManager()
-# path = Path('11241')
-# fm._is_valid_tree(tree)
