@@ -44,6 +44,7 @@ class JsonManager(metaclass=Singleton):
     def write(
         self, data: dict, path: Path = None, update: bool = None
     ) -> JsonManager:
+        """Write to .json file, create if it is not exist."""
         if path is None:
             path = self.path
         if update is None:
@@ -108,7 +109,7 @@ class JsonManager(metaclass=Singleton):
             raise PathError
 
     @property
-    def allowed_extensions(self) -> list:
+    def allowed_extension(self) -> list:
         return self._allowed_extension
 
     @property
