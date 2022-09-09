@@ -37,7 +37,7 @@ class JsonManager(metaclass=Singleton):
     def read(self, file_path: Path = None) -> dict:
         if file_path is None:
             file_path = self.path
-        self._json_path_validation(file_path)
+        self._is_valid_json_file_path(file_path)
         with open(file_path) as json_file:
             return json.load(json_file)
 
@@ -47,7 +47,7 @@ class JsonManager(metaclass=Singleton):
         if path is None:
             path = self.path
         if update is None:
-            self._suffix_validation(path)
+            self._is_valid_json_suffix(path)
             validate_filename(path.stem)
         with open(path, 'w') as json_file:
             json.dump(data, json_file, indent=4)
@@ -63,7 +63,7 @@ class JsonManager(metaclass=Singleton):
     def delete_file(self, file_path: Path = None) -> JsonManager:
         if file_path is None:
             file_path = self.path
-        self._json_path_validation(file_path)
+        self._is_valid_json_file_path(file_path)
         try:
             os.remove(file_path)
         except OSError as er:
@@ -91,7 +91,7 @@ class JsonManager(metaclass=Singleton):
                 if item.is_dir() and depth > 0:
                     yield from self.scan_path(item, depth)
 
-    def _json_path_validation(self, file_path: Path):
+    def _is_valid_json_file_path(self, file_path: Path):
         if not (
             isinstance(file_path, Path)
             and file_path.exists()
@@ -100,7 +100,7 @@ class JsonManager(metaclass=Singleton):
         ):
             raise PathError
 
-    def _suffix_validation(self, file_path: Path):
+    def _is_valid_json_suffix(self, file_path: Path):
         if (
             not isinstance(file_path, Path)
             or not file_path.suffix == JsonManager._allowed_extension
@@ -118,5 +118,5 @@ class JsonManager(metaclass=Singleton):
     @path.setter
     def path(self, path: Path):
         if path is not None:
-            self._json_path_validation(path)
+            self._is_valid_json_file_path(path)
         self._path = path
