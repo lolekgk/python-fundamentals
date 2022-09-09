@@ -56,7 +56,7 @@ class CSVManager(metaclass=Singleton):
 
         if update is None:
             self._is_valid_csv_suffix(path)
-            validate_filename(path)
+            validate_filename(path.stem)
 
         with open(path, 'w', newline='') as csvfile:
             writer = csv.writer(csvfile)
