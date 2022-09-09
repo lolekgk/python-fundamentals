@@ -131,6 +131,7 @@ class TestJsonManager:
         json_manager.path = valid_json_path
         json_manager.write(data)
         assert json_manager.read() == data
+        del data
 
     def test_write_with_invalid_path_provided(
         self, create_fake_path, json_manager
@@ -147,6 +148,7 @@ class TestJsonManager:
         data = {'update': 201}
         json_manager.update_file(data, valid_json_path)
         assert json_manager.read(valid_json_path) == data
+        del data
 
     def test_update_file_with_valid_path_provided_as_instance_argument(
         self, create_fake_path, json_manager, valid_json_path
@@ -155,6 +157,7 @@ class TestJsonManager:
         json_manager.path = valid_json_path
         json_manager.update_file(data)
         assert json_manager.read() == data
+        del data
 
     def test_update_file_with_invalid_path_provided(
         self, create_fake_path, json_manager
@@ -182,7 +185,7 @@ class TestJsonManager:
         json_manager.delete_file()
         assert not valid_json_path.exists()
 
-    def test_update_file_with_invalid_path_provided(
+    def test_delete_file_with_invalid_path_provided(
         self, create_fake_path, json_manager
     ):
         with pytest.raises(PathError):
