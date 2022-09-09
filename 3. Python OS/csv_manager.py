@@ -5,6 +5,8 @@ import os
 from pathlib import Path
 from typing import Generator
 
+from pathvalidate import validate_filename
+
 
 class PathError(Exception):
     def __init__(
@@ -35,17 +37,26 @@ class CSVManager(metaclass=Singleton):
     def read(self, path: Path = None):
         if path is None:
             path = self.path
-
+        self._is_valid_csv_file_path(path)
         with open(path, newline='', encoding='unicode_escape') as csvfile:
             reader = csv.reader(csvfile, delimiter=' ', quotechar='|')
             for row in reader:
                 print(' '.join(row))
 
     def write(
-        self, path: Path, rows: list[dict], header: list[str] = None
+        self,
+        path: Path,
+        rows: list[dict],
+        header: list[str] = None,
+        update: bool = None,
     ) -> CSVManager:
+        """Write to .csv file, create if it is not exist."""
         if path is None:
             path = self.path
+
+        if update is None:
+            self._is_valid_csv_suffix(path)
+            validate_filename(path)
 
         with open(path, 'w', newline='') as csvfile:
             writer = csv.writer(csvfile)
@@ -60,7 +71,7 @@ class CSVManager(metaclass=Singleton):
         if path is None:
             path = self.path
 
-        self._csv_path_validation(path)
+        self._is_valid_csv_file_path(path)
         try:
             os.remove(path)
         except OSError as err:
@@ -88,7 +99,7 @@ class CSVManager(metaclass=Singleton):
                 if child.is_dir() and depth > 0:
                     yield from self.scan_path(child, depth)
 
-    def _csv_path_validation(self, file_path: Path):
+    def _is_valid_csv_file_path(self, file_path: Path):
         if not (
             isinstance(file_path, Path)
             and file_path.exists()
@@ -96,3 +107,24 @@ class CSVManager(metaclass=Singleton):
             and file_path.suffix == CSVManager._allowed_extension
         ):
             raise PathError
+
+    def _is_valid_csv_suffix(self, file_path: Path):
+        if (
+            not isinstance(file_path, Path)
+            or not file_path.suffix == CSVManager._allowed_extension
+        ):
+            raise PathError
+
+    @property
+    def allowed_extension(self):
+        return self._allowed_extension
+
+    @property
+    def path(self) -> Path:
+        return self._path
+
+    @path.setter
+    def path(self, path: Path):
+        if path is not None:
+            self._is_valid_csv_file_path(path)
+        self._path = path
