@@ -45,9 +45,9 @@ class CSVManager(metaclass=Singleton):
 
     def write(
         self,
-        path: Path,
         rows: list[dict],
         header: list[str] = None,
+        path: Path = None,
         update: bool = None,
     ) -> CSVManager:
         """Write to .csv file, create if it is not exist."""
@@ -70,12 +70,18 @@ class CSVManager(metaclass=Singleton):
     def delete_file(self, path: Path = None) -> CSVManager:
         if path is None:
             path = self.path
-
         self._is_valid_csv_file_path(path)
         try:
             os.remove(path)
         except OSError as err:
             print(err)
+        return self
+
+    def update_file(self, data: list[dict], path: Path = None) -> CSVManager:
+        if path is None:
+            path = self.path
+        self.read(path)
+        self.write(rows=data, path=path, update=True)
         return self
 
     def scan_path(self, path: Path = None, depth: int = None) -> Generator:
