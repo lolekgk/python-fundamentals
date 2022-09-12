@@ -1,26 +1,12 @@
 from __future__ import annotations
 
+import inspect
 import json
 import os
 from pathlib import Path
-from typing import Generator, Union
+from typing import Generator
 
 from pathvalidate import validate_filename
-
-
-def check_path(func):
-    def wrapper(self, *args, **kwargs):
-        if any(isinstance(item, Path) for item in args) or any(
-            isinstance(item, Path) for item in kwargs.values()
-        ):
-            return func(self, *args, **kwargs)
-        print(args)
-        print(kwargs)
-
-        # change path to self.path
-        return func(self, *args, **kwargs, path=self.path)
-
-    return wrapper
 
 
 class PathError(Exception):
@@ -49,13 +35,26 @@ class JsonManager(metaclass=Singleton):
     def __init__(self, path: Path | None = None):
         self.path = path
 
-    @check_path
+    def _check_path(func):
+        def wrapper(self, *args, **kwargs):
+
+            bound_args = inspect.signature(func).bind(self, *args, **kwargs)
+            bound_args.apply_defaults()
+            func_args = dict(bound_args.arguments)
+            if func_args['path'] is None:
+                func_args['path'] = self.path
+                return func(*func_args.values())
+            return func(*func_args.values())
+
+        return wrapper
+
+    @_check_path
     def read(self, path: Path | None = None) -> dict:
         self._is_valid_json_file_path(path)
         with open(path) as json_file:
             return json.load(json_file)
 
-    @check_path
+    @_check_path
     def write(
         self, data: dict, path: Path | None = None, update: bool = False
     ) -> JsonManager:
@@ -67,14 +66,14 @@ class JsonManager(metaclass=Singleton):
             json.dump(data, json_file)
         return self
 
-    @check_path
+    @_check_path
     def update_file(self, data: dict, path: Path | None = None) -> JsonManager:
         self._is_valid_json_file_path(path)
         self.read(path)
         self.write(data, path, update=True)
         return self
 
-    @check_path
+    @_check_path
     def delete_file(self, path: Path | None = None) -> JsonManager:
         self._is_valid_json_file_path(path)
         try:
@@ -84,7 +83,7 @@ class JsonManager(metaclass=Singleton):
         return self
 
     def scan_path(
-        self, path: Union[Path, None] = None, depth: int = -1
+        self, path: Path | None = None, depth: int = -1
     ) -> Generator:
         """Recursively list files ending with .json suffix in all folders in given location
         or up to a certain depth - if provided"""
@@ -131,3 +130,8 @@ class JsonManager(metaclass=Singleton):
         if path is not None:
             self._is_valid_json_file_path(path)
         self._path = path
+
+
+path = Path('/Users/karolgajda/test/test.json')
+jm = JsonManager(path)
+print(jm.read())
