@@ -209,7 +209,7 @@ class TestJsonManager:
     def test_scan_path_with_provided_depth_as_2(
         self, create_fake_path, json_manager, directory_path
     ):
-        result = json_manager.scan_path(directory_path, 2)
+        result = json_manager.scan_path(directory_path, 1)
         assert next(result).as_posix() == '/test/test.json'
         assert next(result).as_posix() == '/test/test1/xx1.json'
         assert next(result).as_posix() == '/test/test2/xx2_1.json'
@@ -222,7 +222,7 @@ class TestJsonManager:
     def test_scan_path_with_provided_depth_as_1(
         self, create_fake_path, json_manager, directory_path
     ):
-        result = json_manager.scan_path(directory_path, 1)
+        result = json_manager.scan_path(directory_path, 0)
         assert next(result).as_posix() == '/test/test.json'
         with pytest.raises(StopIteration):
             next(result)
