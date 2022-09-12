@@ -3,9 +3,24 @@ from __future__ import annotations
 import json
 import os
 from pathlib import Path
-from typing import Generator
+from typing import Generator, Union
 
 from pathvalidate import validate_filename
+
+
+def check_path(func):
+    def wrapper(self, *args, **kwargs):
+        if any(isinstance(item, Path) for item in args) or any(
+            isinstance(item, Path) for item in kwargs.values()
+        ):
+            return func(self, *args, **kwargs)
+        print(args)
+        print(kwargs)
+
+        # change path to self.path
+        return func(self, *args, **kwargs, path=self.path)
+
+    return wrapper
 
 
 class PathError(Exception):
@@ -31,58 +46,53 @@ class Singleton(type):
 class JsonManager(metaclass=Singleton):
     _allowed_extension = '.json'
 
-    def __init__(self, path: Path = None):
+    def __init__(self, path: Path | None = None):
         self.path = path
 
-    def read(self, file_path: Path = None) -> dict:
-        if file_path is None:
-            file_path = self.path
-        self._is_valid_json_file_path(file_path)
-        with open(file_path) as json_file:
+    @check_path
+    def read(self, path: Path | None = None) -> dict:
+        self._is_valid_json_file_path(path)
+        with open(path) as json_file:
             return json.load(json_file)
 
+    @check_path
     def write(
-        self, data: dict, path: Path = None, update: bool = None
+        self, data: dict, path: Path | None = None, update: bool = False
     ) -> JsonManager:
         """Write to .json file, create if it is not exist."""
-        if path is None:
-            path = self.path
-        if update is None:
+        if not update:
             self._is_valid_json_suffix(path)
             validate_filename(path.stem)
         with open(path, 'w') as json_file:
-            json.dump(data, json_file, indent=4)
+            json.dump(data, json_file)
         return self
 
-    def update_file(self, data: dict, file_path: Path = None) -> JsonManager:
-        if file_path is None:
-            file_path = self.path
-        self.read(file_path)
-        self.write(data, file_path, update=True)
+    @check_path
+    def update_file(self, data: dict, path: Path | None = None) -> JsonManager:
+        self._is_valid_json_file_path(path)
+        self.read(path)
+        self.write(data, path, update=True)
         return self
 
-    def delete_file(self, file_path: Path = None) -> JsonManager:
-        if file_path is None:
-            file_path = self.path
-        self._is_valid_json_file_path(file_path)
+    @check_path
+    def delete_file(self, path: Path | None = None) -> JsonManager:
+        self._is_valid_json_file_path(path)
         try:
-            os.remove(file_path)
+            os.remove(path)
         except OSError as er:
             print(er)
         return self
 
-    def scan_path(self, path: Path = None, depth: int = None) -> Generator:
+    def scan_path(
+        self, path: Union[Path, None] = None, depth: int = -1
+    ) -> Generator:
         """Recursively list files ending with .json suffix in all folders in given location
         or up to a certain depth - if provided"""
-        if path is None:
-            path = self.path
-
-        if depth is None:
+        if depth < 0:
             for tree_path in path.rglob(f'*{JsonManager._allowed_extension}'):
                 yield tree_path
 
-        if depth is not None:
-            depth -= 1
+        else:
             for item in path.iterdir():
                 if (
                     item.suffix == JsonManager._allowed_extension
@@ -90,21 +100,21 @@ class JsonManager(metaclass=Singleton):
                 ):
                     yield item
                 if item.is_dir() and depth > 0:
-                    yield from self.scan_path(item, depth)
+                    yield from self.scan_path(item, depth - 1)
 
-    def _is_valid_json_file_path(self, file_path: Path):
+    def _is_valid_json_file_path(self, path: Path):
         if not (
-            isinstance(file_path, Path)
-            and file_path.exists()
-            and file_path.is_file()
-            and file_path.suffix == JsonManager._allowed_extension
+            isinstance(path, Path)
+            and path.exists()
+            and path.is_file()
+            and path.suffix == JsonManager._allowed_extension
         ):
             raise PathError
 
-    def _is_valid_json_suffix(self, file_path: Path):
+    def _is_valid_json_suffix(self, path: Path):
         if (
-            not isinstance(file_path, Path)
-            or not file_path.suffix == JsonManager._allowed_extension
+            not isinstance(path, Path)
+            or not path.suffix == JsonManager._allowed_extension
         ):
             raise PathError
 
@@ -117,7 +127,7 @@ class JsonManager(metaclass=Singleton):
         return self._path
 
     @path.setter
-    def path(self, path: Path):
+    def path(self, path: Path | None):
         if path is not None:
             self._is_valid_json_file_path(path)
         self._path = path
