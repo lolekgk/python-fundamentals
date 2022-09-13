@@ -64,13 +64,11 @@ class JsonManager(metaclass=Singleton):
             validate_filename(path.stem)
         with open(path, 'w') as json_file:
             json.dump(data, json_file)
-        return self
 
     @_check_path
     def update_file(self, data: dict, path: Path | None = None) -> JsonManager:
         self.read(path)
         self.write(data, path, update=True)
-        return self
 
     @_check_path
     def delete_file(self, path: Path | None = None) -> JsonManager:
@@ -79,11 +77,8 @@ class JsonManager(metaclass=Singleton):
             os.remove(path)
         except OSError as er:
             print(er)
-        return self
 
-    def scan_folder(
-        self, path: Path | None = None, depth: int = -1
-    ) -> Generator:
+    def scan_folder(self, path: Path, depth: int = -1) -> Generator:
         """Recursively list files ending with .json suffix in all folders in given location
         or up to a certain depth - if provided"""
         self._is_valid_folder_path(path)
