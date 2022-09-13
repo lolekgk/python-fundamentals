@@ -91,14 +91,13 @@ class JsonManager(metaclass=Singleton):
             for tree_path in path.rglob(f'*{JsonManager._allowed_extension}'):
                 yield tree_path
 
-        else:
+        if depth >= 0:
             for item in path.iterdir():
                 if (
                     item.suffix == JsonManager._allowed_extension
                     and item.is_file()
                 ):
                     yield item
-                # depth > 0
                 if item.is_dir() and depth > 0:
                     yield from self.scan_folder(item, depth - 1)
 
@@ -137,3 +136,10 @@ class JsonManager(metaclass=Singleton):
         if path is not None:
             self._is_valid_json_file_path(path)
         self._path = path
+
+
+# path = Path('/Users/karolgajda/test/test.json')
+# jm = JsonManager()
+# # print(jm.read())
+# for x in jm.scan_folder(path, 0):
+#     print(x)
