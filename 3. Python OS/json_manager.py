@@ -136,10 +136,3 @@ class JsonManager(metaclass=Singleton):
         if path is not None:
             self._is_valid_json_file_path(path)
         self._path = path
-
-
-# path = Path('/Users/karolgajda/test/test.json')
-# jm = JsonManager()
-# # print(jm.read())
-# for x in jm.scan_folder(path, 0):
-#     print(x)
