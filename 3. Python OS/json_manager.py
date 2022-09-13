@@ -68,7 +68,6 @@ class JsonManager(metaclass=Singleton):
 
     @_check_path
     def update_file(self, data: dict, path: Path | None = None) -> JsonManager:
-        self._is_valid_json_file_path(path)
         self.read(path)
         self.write(data, path, update=True)
         return self
@@ -82,11 +81,12 @@ class JsonManager(metaclass=Singleton):
             print(er)
         return self
 
-    def scan_path(
+    def scan_folder(
         self, path: Path | None = None, depth: int = -1
     ) -> Generator:
         """Recursively list files ending with .json suffix in all folders in given location
         or up to a certain depth - if provided"""
+        self._is_valid_folder_path(path)
         if depth < 0:
             for tree_path in path.rglob(f'*{JsonManager._allowed_extension}'):
                 yield tree_path
@@ -98,8 +98,9 @@ class JsonManager(metaclass=Singleton):
                     and item.is_file()
                 ):
                     yield item
+                # depth > 0
                 if item.is_dir() and depth > 0:
-                    yield from self.scan_path(item, depth - 1)
+                    yield from self.scan_folder(item, depth - 1)
 
     def _is_valid_json_file_path(self, path: Path):
         if not (
@@ -117,6 +118,12 @@ class JsonManager(metaclass=Singleton):
         ):
             raise PathError
 
+    def _is_valid_folder_path(self, path: Path):
+        if not isinstance(path, Path) or not path.is_dir():
+            raise PathError(
+                'You need to provide valid directory path to perform this action.'
+            )
+
     @property
     def allowed_extension(self) -> list:
         return self._allowed_extension
@@ -130,8 +137,3 @@ class JsonManager(metaclass=Singleton):
         if path is not None:
             self._is_valid_json_file_path(path)
         self._path = path
-
-
-path = Path('/Users/karolgajda/test/test.json')
-jm = JsonManager(path)
-print(jm.read())
