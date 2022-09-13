@@ -133,9 +133,7 @@ class TestJsonManager:
         assert json_manager.read() == data
         del data
 
-    def test_write_with_invalid_path_provided(
-        self, create_fake_path, json_manager
-    ):
+    def test_write_with_invalid_path(self, create_fake_path, json_manager):
         with pytest.raises(PathError):
             json_manager.write({'test': 101})
 
@@ -159,7 +157,7 @@ class TestJsonManager:
         assert json_manager.read() == data
         del data
 
-    def test_update_file_with_invalid_path_provided(
+    def test_update_file_with_invalid_path(
         self, create_fake_path, json_manager
     ):
         with pytest.raises(PathError):
@@ -185,7 +183,7 @@ class TestJsonManager:
         json_manager.delete_file()
         assert not valid_json_path.exists()
 
-    def test_delete_file_with_invalid_path_provided(
+    def test_delete_file_with_invalid_path(
         self, create_fake_path, json_manager
     ):
         with pytest.raises(PathError):
@@ -224,3 +222,27 @@ class TestJsonManager:
     ):
         result = json_manager.scan_folder(directory_path, 0)
         assert list(result) == [Path('/test/test.json')]
+
+    def test_is_valid_folder_with_invalid_path_value(
+        self, create_fake_path, json_manager, valid_json_path
+    ):
+        with pytest.raises(PathError):
+            json_manager._is_valid_folder_path(valid_json_path)
+
+    def test_is_valid_folder_with_invalid_path_type(
+        self, create_fake_path, json_manager
+    ):
+        with pytest.raises(PathError):
+            json_manager._is_valid_folder_path('/test')
+
+    def test_is_valid_json_suffix_with_invalid_path_type(
+        self, create_fake_path, json_manager, valid_json_path
+    ):
+        with pytest.raises(PathError):
+            json_manager._is_valid_json_suffix('/path')
+
+    def test_is_valid_json_suffix_with_invalid_suffix(
+        self, create_fake_path, json_manager, invalid_json_path
+    ):
+        with pytest.raises(PathError):
+            json_manager._is_valid_json_suffix(invalid_json_path)
