@@ -191,38 +191,36 @@ class TestJsonManager:
         with pytest.raises(PathError):
             json_manager.delete_file()
 
-    def test_scan_path_without_provided_depth(
+    def test_scan_folder_without_provided_depth(
         self, create_fake_path, json_manager, directory_path
     ):
-        result = json_manager.scan_path(directory_path)
-        assert next(result).as_posix() == '/test/test.json'
-        assert next(result).as_posix() == '/test/test1/xx1.json'
-        assert next(result).as_posix() == '/test/test2/xx2_1.json'
-        assert next(result).as_posix() == '/test/test2/xx2_2.json'
-        assert next(result).as_posix() == '/test/test2/xx2_3.json'
-        assert next(result).as_posix() == '/test/test2/test2_1/xx2.json'
-        assert next(result).as_posix() == '/test/test3/xx3.json'
-        assert next(result).as_posix() == '/test/test3/test3_1/xx3.json'
-        with pytest.raises(StopIteration):
-            next(result)
+        result = json_manager.scan_folder(directory_path)
+        assert list(result) == [
+            Path('/test/test.json'),
+            Path('/test/test1/xx1.json'),
+            Path('/test/test2/xx2_1.json'),
+            Path('/test/test2/xx2_2.json'),
+            Path('/test/test2/xx2_3.json'),
+            Path('/test/test2/test2_1/xx2.json'),
+            Path('/test/test3/xx3.json'),
+            Path('/test/test3/test3_1/xx3.json'),
+        ]
 
-    def test_scan_path_with_provided_depth_as_2(
+    def test_scan_folder_with_provided_depth_as_2(
         self, create_fake_path, json_manager, directory_path
     ):
-        result = json_manager.scan_path(directory_path, 1)
-        assert next(result).as_posix() == '/test/test.json'
-        assert next(result).as_posix() == '/test/test1/xx1.json'
-        assert next(result).as_posix() == '/test/test2/xx2_1.json'
-        assert next(result).as_posix() == '/test/test2/xx2_2.json'
-        assert next(result).as_posix() == '/test/test2/xx2_3.json'
-        assert next(result).as_posix() == '/test/test3/xx3.json'
-        with pytest.raises(StopIteration):
-            next(result)
+        result = json_manager.scan_folder(directory_path, 1)
+        assert list(result) == [
+            Path('/test/test.json'),
+            Path('/test/test1/xx1.json'),
+            Path('/test/test2/xx2_1.json'),
+            Path('/test/test2/xx2_2.json'),
+            Path('/test/test2/xx2_3.json'),
+            Path('/test/test3/xx3.json'),
+        ]
 
-    def test_scan_path_with_provided_depth_as_1(
+    def test_scan_folder_with_provided_depth_as_1(
         self, create_fake_path, json_manager, directory_path
     ):
-        result = json_manager.scan_path(directory_path, 0)
-        assert next(result).as_posix() == '/test/test.json'
-        with pytest.raises(StopIteration):
-            next(result)
+        result = json_manager.scan_folder(directory_path, 0)
+        assert list(result) == [Path('/test/test.json')]
