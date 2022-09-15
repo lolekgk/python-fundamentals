@@ -1,8 +1,9 @@
 import os
+from dataclasses import asdict
 from pathlib import Path
 
 import pytest
-from folder_manager import FolderManager
+from folder_manager import FolderManager, Tree
 
 
 @pytest.fixture
@@ -47,51 +48,27 @@ def folder_manager():
 
 @pytest.fixture
 def valid_tree():
-    tree = {
-        'name': 'example',
-        'type': 'folder',
-        'content': [
-            {
-                'name': 'subfolder_1',
-                'type': 'folder',
-                'content': [
-                    {'name': 'subfolder_1_1', 'type': 'folder', 'content': []},
-                    {'name': 'subfolder_1_2', 'type': 'folder', 'content': []},
-                ],
-            },
-            {
-                'name': 'subfolder_2',
-                'type': 'folder',
-                'content': [{'name': 'test_file_3.txt', 'type': 'file'}],
-            },
-        ],
-    }
+
+    leaf_1_1 = Tree('sub_1_1')
+    leaf_1_2 = Tree('sub_1_2')
+    leaf_1 = Tree('sub_1', [leaf_1_1, leaf_1_2])
+    leaf_2 = Tree('sub_2')
+    leaf_3 = Tree('sub_3')
+    tree = Tree('example', [leaf_1, leaf_2, leaf_3])
     yield tree
-    del tree
+    del (
+        leaf_1,
+        leaf_1_1,
+        leaf_1_2,
+        leaf_2,
+        leaf_3,
+        tree,
+    )
 
 
 @pytest.fixture
 def invalid_tree():
-    # invalid key name 'cont'
-    tree = {
-        'name': 'example',
-        'type': 'folder',
-        'content': [
-            {
-                'name': 'subfolder_1',
-                'type': 'folder',
-                'content': [
-                    {'name': 'subfolder_1_1', 'type': 'folder', 'content': []},
-                    {'name': 'subfolder_1_2', 'type': 'folder', 'cont': []},
-                ],
-            },
-            {
-                'name': 'subfolder_2',
-                'type': 'folder',
-                'content': [{'name': 'test_file_3.txt', 'type': 'file'}],
-            },
-        ],
-    }
+    tree = {'test': 'sub_test'}
     yield tree
     del tree
 
@@ -135,15 +112,10 @@ class TestFolderManager:
         self, create_fake_path, valid_tree, main_path, folder_manager
     ):
         folder_manager.create_folder_tree(main_path, valid_tree)
-        assert Path('/test/example/subfolder_1/subfolder_1_1').exists()
-        assert Path('/test/example/subfolder_1/subfolder_1_2').exists()
-        assert Path('/test/example/subfolder_2/').exists()
-
-    def test_create_folder_with_invalid_tree_structure(
-        self, create_fake_path, invalid_tree, main_path, folder_manager
-    ):
-        with pytest.raises(ValueError):
-            folder_manager.create_folder_tree(main_path, invalid_tree)
+        assert Path('/test/example/sub_1/sub_1_1').exists()
+        assert Path('/test/example/sub_1/sub_1_2').exists()
+        assert Path('/test/example/sub_2/').exists()
+        assert Path('/test/example/sub_3/').exists()
 
     def test_create_folder_with_invalid_tree_type(
         self, create_fake_path, main_path, folder_manager
@@ -152,36 +124,10 @@ class TestFolderManager:
             folder_manager.create_folder_tree(main_path, 1)
 
     def test_path_to_dict(self, create_fake_path, main_path, folder_manager):
-        result = folder_manager.path_to_dict(main_path)
-        assert result == {
-            'name': 'test',
-            'type': 'folder',
-            'content': [
-                {
-                    'name': 'x1',
-                    'type': 'folder',
-                    'content': [
-                        {
-                            'name': 'xx1',
-                            'type': 'folder',
-                            'content': [],
-                        },
-                        {
-                            'name': 'xx2',
-                            'type': 'folder',
-                            'content': [],
-                        },
-                    ],
-                },
-                {
-                    'name': 'x2',
-                    'type': 'folder',
-                    'content': [],
-                },
-                {
-                    'name': 'x3',
-                    'type': 'folder',
-                    'content': [],
-                },
-            ],
-        }
+        result = folder_manager.path_to_tree(main_path)
+        assert len(asdict(result)['content']) == 3
+        assert asdict(result)['folder_name'] == 'test'
+        # test the most nested element
+        assert (
+            asdict(result)['content'][0]['content'][0]['folder_name'] == 'xx1'
+        )
