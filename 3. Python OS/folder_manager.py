@@ -45,41 +45,30 @@ class FolderManager:
 
     def create_folder_tree(self, path: Path, tree: dict):
         """Create folder tree in your OS based on provided tree argument of
-        Tree type."""
+        dict type.
+        Example:
+        tree = {'name': 'example', 'content': []}
+        """
         self._is_valid_tree(tree)
         path = path / tree['name']
         for item in tree['content']:
             self.create_folder_tree(path, item)
         self.create_folder(path)
 
-    def path_to_tree(self, path: Path) -> Tree:
-        """Create Tree object representing directory structure of given path"""
-        tree = Tree(path.name)
+    def path_to_dict(self, path: Path) -> dict:
+        """Create dict representing directory structure of given path"""
+        tree = {'name': path.name}
         if path.is_dir():
-            tree.content = [self.path_to_tree(item) for item in path.iterdir()]
+            tree['content'] = [
+                self.path_to_dict(item) for item in path.iterdir()
+            ]
         return tree
 
     def _is_valid_tree(self, tree):
-        if not isinstance(tree, Tree):
-            raise TypeError(
-                f'You need to provide tree of {Tree.__name__} type.'
-            )
+        if not isinstance(tree, dict) or not all(
+            item in tree.keys() for item in ['name', 'content']
+        ):
+            raise Exception
 
-
-# example tree
-# tree = {
-#     'name': 'example',
-#     'content': [
-#         {
-#             'name': 'subfolder_1',
-#             'content': [
-#                 {'name': 'subfolder_1_1', 'content': []},
-#                 {'name': 'subfolder_1_2', 'content': []},
-#             ],
-#         },
-#         {
-#             'name': 'subfolder_2',
-#             'content': [],
-#         },
-#     ],
-# }
+        for item in tree['content']:
+            self._is_valid_tree(item)
