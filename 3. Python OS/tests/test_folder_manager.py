@@ -49,20 +49,17 @@ def folder_manager():
 def valid_tree():
     tree = {
         'name': 'example',
-        'type': 'folder',
         'content': [
             {
                 'name': 'subfolder_1',
-                'type': 'folder',
                 'content': [
-                    {'name': 'subfolder_1_1', 'type': 'folder', 'content': []},
-                    {'name': 'subfolder_1_2', 'type': 'folder', 'content': []},
+                    {'name': 'subfolder_1_1', 'content': []},
+                    {'name': 'subfolder_1_2', 'content': []},
                 ],
             },
             {
                 'name': 'subfolder_2',
-                'type': 'folder',
-                'content': [{'name': 'test_file_3.txt', 'type': 'file'}],
+                'content': [],
             },
         ],
     }
@@ -75,20 +72,17 @@ def invalid_tree():
     # invalid key name 'cont'
     tree = {
         'name': 'example',
-        'type': 'folder',
         'content': [
             {
                 'name': 'subfolder_1',
-                'type': 'folder',
                 'content': [
-                    {'name': 'subfolder_1_1', 'type': 'folder', 'content': []},
-                    {'name': 'subfolder_1_2', 'type': 'folder', 'cont': []},
+                    {'name': 'subfolder_1_1', 'content': []},
+                    {'name': 'subfolder_1_2', 'cont': []},
                 ],
             },
             {
                 'name': 'subfolder_2',
-                'type': 'folder',
-                'content': [{'name': 'test_file_3.txt', 'type': 'file'}],
+                'content': [],
             },
         ],
     }
@@ -155,32 +149,26 @@ class TestFolderManager:
         result = folder_manager.path_to_dict(main_path)
         assert result == {
             'name': 'test',
-            'type': 'folder',
             'content': [
                 {
                     'name': 'x1',
-                    'type': 'folder',
                     'content': [
                         {
                             'name': 'xx1',
-                            'type': 'folder',
                             'content': [],
                         },
                         {
                             'name': 'xx2',
-                            'type': 'folder',
                             'content': [],
                         },
                     ],
                 },
                 {
                     'name': 'x2',
-                    'type': 'folder',
                     'content': [],
                 },
                 {
                     'name': 'x3',
-                    'type': 'folder',
                     'content': [],
                 },
             ],
