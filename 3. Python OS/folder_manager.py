@@ -5,15 +5,6 @@ import os
 import shutil
 from pathlib import Path
 
-from pydantic import Field, StrictStr
-from pydantic.dataclasses import dataclass
-
-
-@dataclass
-class Tree:
-    folder_name: StrictStr
-    content: list[Tree] = Field(default_factory=list)
-
 
 class FolderManager:
     def __init__(self, path: Path | None = None):
@@ -52,12 +43,12 @@ class FolderManager:
         except OSError as error:
             print(error)
 
-    def create_folder_tree(self, path: Path, tree: Tree):
+    def create_folder_tree(self, path: Path, tree: dict):
         """Create folder tree in your OS based on provided tree argument of
         Tree type."""
         self._is_valid_tree(tree)
-        path = path / tree.folder_name
-        for item in tree.content:
+        path = path / tree['name']
+        for item in tree['content']:
             self.create_folder_tree(path, item)
         self.create_folder(path)
 
@@ -73,3 +64,22 @@ class FolderManager:
             raise TypeError(
                 f'You need to provide tree of {Tree.__name__} type.'
             )
+
+
+# example tree
+# tree = {
+#     'name': 'example',
+#     'content': [
+#         {
+#             'name': 'subfolder_1',
+#             'content': [
+#                 {'name': 'subfolder_1_1', 'content': []},
+#                 {'name': 'subfolder_1_2', 'content': []},
+#             ],
+#         },
+#         {
+#             'name': 'subfolder_2',
+#             'content': [],
+#         },
+#     ],
+# }
