@@ -61,13 +61,15 @@ class FolderManager:
             self.create_folder_tree(path, item)
         self.create_folder(path)
 
-    def path_to_tree(self, path: Path) -> dict:
+    def path_to_tree(self, path: Path) -> Tree:
         """Create Tree object representing directory structure of given path"""
-        tree = Tree(path.folder_name)
+        tree = Tree(path.name)
         if path.is_dir():
             tree.content = [self.path_to_tree(item) for item in path.iterdir()]
         return tree
 
     def _is_valid_tree(self, tree):
         if not isinstance(tree, Tree):
-            raise TypeError('You need to provide tree of Tree type.')
+            raise TypeError(
+                f'You need to provide tree of {Tree.__name__} type.'
+            )
