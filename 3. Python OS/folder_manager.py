@@ -65,10 +65,10 @@ class FolderManager:
         return tree
 
     def _is_valid_tree(self, tree):
-        if not isinstance(tree, dict) or not all(
-            item in tree.keys() for item in ['name', 'content']
-        ):
-            raise Exception
+        if not isinstance(tree, dict):
+            raise TypeError
+        if not all(item in tree.keys() for item in ['name', 'content']):
+            raise ValueError
 
         for item in tree['content']:
             self._is_valid_tree(item)
