@@ -226,38 +226,36 @@ class TestCSVManager:
         with pytest.raises(PathError):
             csv_manager.delete_file()
 
-    def test_scan_path_without_provided_depth(
+    def test_scan_folder_without_provided_depth(
         self, create_fake_path, csv_manager, main_directory_path
     ):
-        result = csv_manager.scan_path(main_directory_path)
-        assert next(result).as_posix() == '/test/test.csv'
-        assert next(result).as_posix() == '/test/test1/xx1.csv'
-        assert next(result).as_posix() == '/test/test2/xx2_1.csv'
-        assert next(result).as_posix() == '/test/test2/xx2_2.csv'
-        assert next(result).as_posix() == '/test/test2/xx2_3.csv'
-        assert next(result).as_posix() == '/test/test2/test2_1/xx2.csv'
-        assert next(result).as_posix() == '/test/test3/xx3.csv'
-        assert next(result).as_posix() == '/test/test3/test3_1/xx3.csv'
-        with pytest.raises(StopIteration):
-            next(result)
+        result = csv_manager.scan_folder(main_directory_path)
+        assert list(result) == [
+            Path('/test/test.csv'),
+            Path('/test/test1/xx1.csv'),
+            Path('/test/test2/xx2_1.csv'),
+            Path('/test/test2/xx2_2.csv'),
+            Path('/test/test2/xx2_3.csv'),
+            Path('/test/test2/test2_1/xx2.csv'),
+            Path('/test/test3/xx3.csv'),
+            Path('/test/test3/test3_1/xx3.csv'),
+        ]
 
-    def test_scan_path_with_provided_depth_as_2(
+    def test_scan_folder_with_provided_depth_as_1(
         self, create_fake_path, csv_manager, main_directory_path
     ):
-        result = csv_manager.scan_path(main_directory_path, 2)
-        assert next(result).as_posix() == '/test/test.csv'
-        assert next(result).as_posix() == '/test/test1/xx1.csv'
-        assert next(result).as_posix() == '/test/test2/xx2_1.csv'
-        assert next(result).as_posix() == '/test/test2/xx2_2.csv'
-        assert next(result).as_posix() == '/test/test2/xx2_3.csv'
-        assert next(result).as_posix() == '/test/test3/xx3.csv'
-        with pytest.raises(StopIteration):
-            next(result)
+        result = csv_manager.scan_folder(main_directory_path, 1)
+        assert list(result) == [
+            Path('/test/test.csv'),
+            Path('/test/test1/xx1.csv'),
+            Path('/test/test2/xx2_1.csv'),
+            Path('/test/test2/xx2_2.csv'),
+            Path('/test/test2/xx2_3.csv'),
+            Path('/test/test3/xx3.csv'),
+        ]
 
-    def test_scan_path_with_provided_depth_as_1(
+    def test_scan_folder_with_provided_depth_as_0(
         self, create_fake_path, csv_manager, main_directory_path
     ):
-        result = csv_manager.scan_path(main_directory_path, 1)
-        assert next(result).as_posix() == '/test/test.csv'
-        with pytest.raises(StopIteration):
-            next(result)
+        result = csv_manager.scan_folder(main_directory_path, 0)
+        assert list(result) == [Path('/test/test.csv')]
