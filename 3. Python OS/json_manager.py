@@ -32,7 +32,7 @@ class Singleton(type):
 class JsonManager(metaclass=Singleton):
     _allowed_extension = '.json'
 
-    def __init__(self, path: Path | None = None):
+    def __init__(self, path: Path = None):
         self.path = path
 
     def _check_path(func):
@@ -49,14 +49,14 @@ class JsonManager(metaclass=Singleton):
         return wrapper
 
     @_check_path
-    def read(self, path: Path | None = None) -> dict:
+    def read(self, path: Path = None) -> dict:
         self._is_valid_json_file_path(path)
         with open(path) as json_file:
             return json.load(json_file)
 
     @_check_path
     def write(
-        self, data: dict, path: Path | None = None, update: bool = False
+        self, data: dict, path: Path = None, update: bool = False
     ) -> JsonManager:
         """Write to .json file, create if it is not exist."""
         if not update:
@@ -66,12 +66,12 @@ class JsonManager(metaclass=Singleton):
             json.dump(data, json_file)
 
     @_check_path
-    def update_file(self, data: dict, path: Path | None = None) -> JsonManager:
+    def update_file(self, data: dict, path: Path = None) -> JsonManager:
         self.read(path)
         self.write(data, path, update=True)
 
     @_check_path
-    def delete_file(self, path: Path | None = None) -> JsonManager:
+    def delete_file(self, path: Path = None) -> JsonManager:
         self._is_valid_json_file_path(path)
         try:
             os.remove(path)
@@ -86,7 +86,7 @@ class JsonManager(metaclass=Singleton):
             for tree_path in path.rglob(f'*{JsonManager._allowed_extension}'):
                 yield tree_path
 
-        if depth >= 0:
+        else:
             for item in path.iterdir():
                 if (
                     item.suffix == JsonManager._allowed_extension
@@ -127,7 +127,7 @@ class JsonManager(metaclass=Singleton):
         return self._path
 
     @path.setter
-    def path(self, path: Path | None):
+    def path(self, path: Path):
         if path is not None:
             self._is_valid_json_file_path(path)
         self._path = path
