@@ -1,8 +1,7 @@
-import os
 from pathlib import Path
 
 import pytest
-from folder_manager import FolderManager
+from folder_manager import FolderManager, FolderTreeCreator
 
 
 @pytest.fixture
