@@ -204,7 +204,7 @@ class TestJsonManager:
             Path('/test/test3/test3_1/xx3.json'),
         ]
 
-    def test_scan_folder_with_provided_depth_as_2(
+    def test_scan_folder_with_provided_depth_as_1(
         self, create_fake_path, json_manager, directory_path
     ):
         result = json_manager.scan_folder(directory_path, 1)
@@ -217,7 +217,7 @@ class TestJsonManager:
             Path('/test/test3/xx3.json'),
         ]
 
-    def test_scan_folder_with_provided_depth_as_1(
+    def test_scan_folder_with_provided_depth_as_0(
         self, create_fake_path, json_manager, directory_path
     ):
         result = json_manager.scan_folder(directory_path, 0)
