@@ -1,7 +1,7 @@
 from pathlib import Path
 
 import pytest
-from folder_manager import FolderManager, FolderTreeCreator
+from folder_manager import FolderManager
 
 
 @pytest.fixture
@@ -71,6 +71,7 @@ def invalid_tree():
     # invalid key name 'cont'
     tree = {
         'name': 'example',
+        "add_date": "",
         'content': [
             {
                 'name': 'subfolder_1',
