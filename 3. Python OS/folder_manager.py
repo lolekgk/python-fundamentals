@@ -4,6 +4,7 @@ import inspect
 import os
 import shutil
 from pathlib import Path
+from typing import Callable
 
 
 class FolderManager:
@@ -43,7 +44,23 @@ class FolderManager:
         except OSError as error:
             print(error)
 
-    def create_folder_tree(self, path: Path, tree: dict):
+    def create_tree(self, folder_name: str) -> dict:
+        content = []
+        depth = int(
+            input(
+                f'\nProvide number of folders you want to create in: "{folder_name}"? '
+            )
+        )
+        if depth > 0:
+            for num in range(depth):
+                sub_name = input(
+                    f"\n{folder_name = }\n {num+1}. subfolder name: "
+                )
+                content.append(self.create_tree(sub_name))
+
+        return {'name': folder_name, 'content': content}
+
+    def create_folder_tree(self, path: Path, tree: Callable[[str], dict]):
         """Create folder tree in your OS based on provided tree argument of
         dict type.
         Example:
