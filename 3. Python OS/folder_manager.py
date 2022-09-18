@@ -73,9 +73,7 @@ class FolderManager:
         for item in tree['content']:
             self._is_valid_tree(item)
 
-
-# Helper class
-class FolderTreeCreator:
+    # Helper function
     def create_tree(self, folder_name: str) -> dict:
         content = []
         depth = int(
