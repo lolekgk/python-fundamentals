@@ -204,7 +204,7 @@ class TestJsonManager:
             Path('/test/test3/test3_1/xx3.json'),
         ]
 
-    def test_scan_folder_with_provided_depth_as_2(
+    def test_scan_folder_with_provided_depth_as_1(
         self, create_fake_path, json_manager, directory_path
     ):
         result = json_manager.scan_folder(directory_path, 1)
@@ -217,32 +217,26 @@ class TestJsonManager:
             Path('/test/test3/xx3.json'),
         ]
 
-    def test_scan_folder_with_provided_depth_as_1(
+    def test_scan_folder_with_provided_depth_as_0(
         self, create_fake_path, json_manager, directory_path
     ):
         result = json_manager.scan_folder(directory_path, 0)
         assert list(result) == [Path('/test/test.json')]
 
-    def test_is_valid_folder_with_invalid_path_value(
+    def test_is_valid_folder(
         self, create_fake_path, json_manager, valid_json_path
     ):
         with pytest.raises(PathError):
             json_manager._is_valid_folder_path(valid_json_path)
 
-    def test_is_valid_folder_with_invalid_path_type(
-        self, create_fake_path, json_manager
-    ):
         with pytest.raises(PathError):
             json_manager._is_valid_folder_path('/test')
 
-    def test_is_valid_json_suffix_with_invalid_path_type(
+    def test_is_valid_json_suffix(
         self, create_fake_path, json_manager, valid_json_path
     ):
         with pytest.raises(PathError):
             json_manager._is_valid_json_suffix('/path')
 
-    def test_is_valid_json_suffix_with_invalid_suffix(
-        self, create_fake_path, json_manager, invalid_json_path
-    ):
         with pytest.raises(PathError):
             json_manager._is_valid_json_suffix(invalid_json_path)

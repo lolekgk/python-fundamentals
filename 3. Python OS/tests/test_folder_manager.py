@@ -133,12 +133,6 @@ class TestFolderManager:
         assert Path('/test/example/subfolder_1/subfolder_1_2').exists()
         assert Path('/test/example/subfolder_2/').exists()
 
-    def test_create_folder_with_invalid_tree_structure(
-        self, create_fake_path, invalid_tree, main_path, folder_manager
-    ):
-        with pytest.raises(ValueError):
-            folder_manager.create_folder_tree(main_path, invalid_tree)
-
     def test_create_folder_with_invalid_tree_type(
         self, create_fake_path, main_path, folder_manager
     ):
