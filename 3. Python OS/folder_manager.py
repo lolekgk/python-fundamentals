@@ -3,7 +3,6 @@ from __future__ import annotations
 import inspect
 import os
 import shutil
-from enum import Enum
 from pathlib import Path
 
 
@@ -25,16 +24,16 @@ class FolderManager:
         return wrapper
 
     @_check_path
-    def create_folder(self, path: Path | None = None):
+    def create_folder(self, path: Path = None):
         os.makedirs(path, exist_ok=True)
 
     @_check_path
-    def list_content(self, path: Path | None = None) -> list:
+    def list_content(self, path: Path = None) -> list:
         return os.listdir(path)
 
     @_check_path
     def delete_folder(
-        self, path: Path | None = None, ignore_dir_content: bool = False
+        self, path: Path = None, ignore_dir_content: bool = False
     ):
         if len(os.listdir(path)) != 0 and not ignore_dir_content:
             raise OSError(f'Directory in provided path: {path} is not empty!')
