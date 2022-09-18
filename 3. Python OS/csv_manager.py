@@ -49,7 +49,7 @@ class CSVManager(metaclass=Singleton):
         return wrapper
 
     @_check_path
-    def read(self, path: Path | None = None):
+    def read(self, path: Path = None):
         self._is_valid_csv_file_path(path)
         with open(path, newline='', encoding='unicode_escape') as csvfile:
             reader = csv.reader(csvfile, delimiter=' ', quotechar='|')
@@ -60,8 +60,8 @@ class CSVManager(metaclass=Singleton):
     def write(
         self,
         rows: list[dict],
-        header: list[str] | None = None,
-        path: Path | None = None,
+        header: list[str] = None,
+        path: Path = None,
         update: bool = False,
     ) -> CSVManager:
         """Write to .csv file, create if it is not exist."""
@@ -78,7 +78,7 @@ class CSVManager(metaclass=Singleton):
                     writer.writerow(list(row.values()))
 
     @_check_path
-    def delete_file(self, path: Path | None = None) -> CSVManager:
+    def delete_file(self, path: Path = None) -> CSVManager:
         self._is_valid_csv_file_path(path)
         try:
             os.remove(path)
@@ -86,15 +86,11 @@ class CSVManager(metaclass=Singleton):
             print(err)
 
     @_check_path
-    def update_file(
-        self, data: list[dict], path: Path | None = None
-    ) -> CSVManager:
+    def update_file(self, data: list[dict], path: Path = None) -> CSVManager:
         self.read(path)
         self.write(rows=data, path=path, update=True)
 
-    def scan_folder(
-        self, path: Path | None = None, depth: int = -1
-    ) -> Generator:
+    def scan_folder(self, path: Path = None, depth: int = -1) -> Generator:
         """Recursively list files ending with .csv suffix in all folders in given location
         or up to a certain depth - if provided"""
         self._is_valid_folder_path(path)

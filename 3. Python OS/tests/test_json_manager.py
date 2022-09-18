@@ -223,7 +223,7 @@ class TestJsonManager:
         result = json_manager.scan_folder(directory_path, 0)
         assert list(result) == [Path('/test/test.json')]
 
-    def test_is_valid_folder_with_invalid_path_value(
+    def test_is_valid_folder(
         self, create_fake_path, json_manager, valid_json_path
     ):
         with pytest.raises(PathError):
@@ -232,18 +232,11 @@ class TestJsonManager:
         with pytest.raises(PathError):
             json_manager._is_valid_folder_path('/test')
 
-    # def test_is_valid_folder_with_invalid_path_type(
-    #     self, create_fake_path, json_manager
-    # ):
-
-    def test_is_valid_json_suffix_with_invalid_path_type(
+    def test_is_valid_json_suffix(
         self, create_fake_path, json_manager, valid_json_path
     ):
         with pytest.raises(PathError):
             json_manager._is_valid_json_suffix('/path')
 
-    def test_is_valid_json_suffix_with_invalid_suffix(
-        self, create_fake_path, json_manager, invalid_json_path
-    ):
         with pytest.raises(PathError):
             json_manager._is_valid_json_suffix(invalid_json_path)
