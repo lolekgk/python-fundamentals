@@ -8,6 +8,8 @@ from typing import Generator
 
 from pathvalidate import validate_filename
 
+from archive import ArchiveMixin
+
 
 class PathError(Exception):
     def __init__(
@@ -29,7 +31,7 @@ class Singleton(type):
         return cls._instances[cls]
 
 
-class JsonManager(metaclass=Singleton):
+class JsonManager(ArchiveMixin, metaclass=Singleton):
     _allowed_extension = '.json'
 
     def __init__(self, path: Path = None):

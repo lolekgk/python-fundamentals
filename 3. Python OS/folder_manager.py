@@ -7,7 +7,7 @@ from pathlib import Path
 
 
 class FolderManager:
-    def __init__(self, path: Path | None = None):
+    def __init__(self, path: Path = None):
         self.path = path
 
     def _check_path(func):

@@ -8,6 +8,8 @@ from typing import Generator
 
 from pathvalidate import validate_filename
 
+from archive import ArchiveMixin
+
 
 class PathError(Exception):
     def __init__(
@@ -29,7 +31,7 @@ class Singleton(type):
         return cls._instances[cls]
 
 
-class CSVManager(metaclass=Singleton):
+class CSVManager(ArchiveMixin, metaclass=Singleton):
     _allowed_extension = '.csv'
 
     def __init__(self, path: Path = None):
@@ -98,7 +100,7 @@ class CSVManager(metaclass=Singleton):
             for csv_path in path.rglob(f"*{CSVManager._allowed_extension}"):
                 yield csv_path
 
-        if depth >= 0:
+        else:
             for child in path.iterdir():
                 if (
                     child.is_file()
