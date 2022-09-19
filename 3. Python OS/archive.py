@@ -1,0 +1,3 @@
+class ArchiveMixin:
+    def add_to_archive():
+        ...
