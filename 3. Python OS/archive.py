@@ -26,10 +26,10 @@ class ArchiveMixin:
         _archive_format = ArchiveFormat.POSIX.value
 
     def prepare_files_to_archive(
-        self, path: Path, destination: Path, depth: int = -1
+        self, folder: Path, destination: Path, depth: int = -1
     ):
-        Path.mkdir(destination)
-        for file in self.scan_folder(path, depth):
+        Path.mkdir(destination, exist_ok=True)
+        for file in self.scan_folder(folder, depth):
             try:
                 shutil.copy2(file, destination)
             except shutil.SameFileError:
@@ -39,11 +39,7 @@ class ArchiveMixin:
         self,
         archive_name: Path,
         root_dir: Path,
-        archive_format=_archive_format,
+        archive_format: str = _archive_format,
+        base_dir: Path = None,
     ):
         shutil.make_archive(archive_name, archive_format, root_dir)
-
-        # try:
-        #     shutil.rmtree(root_dir, ignore_errors=True)
-        # except OSError as error:
-        #     print(error)
