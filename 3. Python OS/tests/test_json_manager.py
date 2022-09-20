@@ -1,4 +1,5 @@
 import json
+import os
 from pathlib import Path
 
 import pytest
@@ -240,3 +241,27 @@ class TestJsonManager:
 
         with pytest.raises(PathError):
             json_manager._is_valid_json_suffix(invalid_json_path)
+
+    def test_add_tree_to_archive(self, tmp_path, json_manager):
+
+        root_dir = tmp_path / "sub1"
+        root_dir.mkdir()
+        destination = tmp_path / 'archive'
+
+        json_manager.add_tree_to_archive(root_dir, destination)
+        if os.name == 'nt':
+            assert (tmp_path / 'archive.7z').exists()
+        else:
+            assert (tmp_path / 'archive.tar.gz').exists()
+
+    def test_add_files_to_archive(self, tmp_path, json_manager):
+
+        root_dir = tmp_path / "sub1"
+        root_dir.mkdir()
+        destination = tmp_path / 'archive'
+
+        json_manager.add_files_to_archive(root_dir, destination)
+        if os.name == 'nt':
+            assert (tmp_path / 'archive.7z').exists()
+        else:
+            assert (tmp_path / 'archive.tar.gz').exists()
