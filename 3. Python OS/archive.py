@@ -43,3 +43,10 @@ class ArchiveMixin:
                 archive_format,
                 tmpdir,
             )
+
+    def add_tree_to_archive(
+        self, src: Path, dst: Path, archive_format: str = _archive_format
+    ):
+        with tempfile.TemporaryDirectory() as tmpdir:
+            shutil.copytree(src, tmpdir, dirs_exist_ok=True)
+            shutil.make_archive(dst, archive_format, tmpdir)
