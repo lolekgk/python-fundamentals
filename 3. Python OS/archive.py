@@ -1,5 +1,6 @@
 import os
 import shutil
+import tempfile
 from enum import Enum
 from pathlib import Path
 
@@ -24,22 +25,3 @@ class ArchiveMixin:
         )
     else:
         _archive_format = ArchiveFormat.POSIX.value
-
-    def prepare_files_to_archive(
-        self, folder: Path, destination: Path, depth: int = -1
-    ):
-        Path.mkdir(destination, exist_ok=True)
-        for file in self.scan_folder(folder, depth):
-            try:
-                shutil.copy2(file, destination)
-            except shutil.SameFileError:
-                pass
-
-    def add_to_archive(
-        self,
-        archive_name: Path,
-        root_dir: Path,
-        archive_format: str = _archive_format,
-        base_dir: Path = None,
-    ):
-        shutil.make_archive(archive_name, archive_format, root_dir)
