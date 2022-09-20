@@ -8,27 +8,7 @@ from typing import Generator
 from pathvalidate import validate_filename
 
 from archive import ArchiveMixin
-from utils import check_path
-
-
-class PathError(Exception):
-    def __init__(
-        self,
-        msg='You need to provide valid path with .csv file to perform this action',
-        *args,
-        **kwargs,
-    ):
-        super().__init__(msg, *args, **kwargs)
-
-
-class Singleton(type):
-    _instances = {}
-
-    def __call__(cls, *args, **kwargs):
-        if cls not in cls._instances:
-            instance = super().__call__(*args, **kwargs)
-            cls._instances[cls] = instance
-        return cls._instances[cls]
+from utils import PathError, Singleton, check_path
 
 
 class CSVManager(ArchiveMixin, metaclass=Singleton):
@@ -115,9 +95,7 @@ class CSVManager(ArchiveMixin, metaclass=Singleton):
 
     def _is_valid_folder_path(self, path: Path):
         if not isinstance(path, Path) or not path.is_dir():
-            raise PathError(
-                'You need to provide valid directory path to perform this action.'
-            )
+            raise PathError
 
     @property
     def allowed_extension(self):

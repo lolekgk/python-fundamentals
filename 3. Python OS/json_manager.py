@@ -1,6 +1,5 @@
 from __future__ import annotations
 
-import inspect
 import json
 import os
 from pathlib import Path
@@ -9,27 +8,7 @@ from typing import Generator
 from pathvalidate import validate_filename
 
 from archive import ArchiveMixin
-from utils import check_path
-
-
-class PathError(Exception):
-    def __init__(
-        self,
-        msg='You need to provide valid path with .json file to perform this action.',
-        *args,
-        **kwargs,
-    ):
-        super().__init__(msg, *args, **kwargs)
-
-
-class Singleton(type):
-    _instances = {}
-
-    def __call__(cls, *args, **kwargs):
-        if cls not in cls._instances:
-            instance = super().__call__(*args, **kwargs)
-            cls._instances[cls] = instance
-        return cls._instances[cls]
+from utils import PathError, Singleton, check_path
 
 
 class JsonManager(ArchiveMixin, metaclass=Singleton):
@@ -73,15 +52,12 @@ class JsonManager(ArchiveMixin, metaclass=Singleton):
         or up to a certain depth - if provided"""
         self._is_valid_folder_path(path)
         if depth < 0:
-            for tree_path in path.rglob(f'*{JsonManager._allowed_extension}'):
+            for tree_path in path.rglob(f'*{self._allowed_extension}'):
                 yield tree_path
 
         else:
             for item in path.iterdir():
-                if (
-                    item.suffix == JsonManager._allowed_extension
-                    and item.is_file()
-                ):
+                if item.suffix == self._allowed_extension and item.is_file():
                     yield item
                 if item.is_dir() and depth > 0:
                     yield from self.scan_folder(item, depth - 1)
@@ -91,22 +67,26 @@ class JsonManager(ArchiveMixin, metaclass=Singleton):
             isinstance(path, Path)
             and path.exists()
             and path.is_file()
-            and path.suffix == JsonManager._allowed_extension
+            and path.suffix == self._allowed_extension
         ):
-            raise PathError
+            raise PathError(
+                'You need to provide valid path to existing file '
+                f'with {self._allowed_extension} suffix to perform this action'
+            )
 
     def _is_valid_json_suffix(self, path: Path):
         if (
             not isinstance(path, Path)
-            or not path.suffix == JsonManager._allowed_extension
+            or not path.suffix == self._allowed_extension
         ):
-            raise PathError
+            raise PathError(
+                'You need to provide valid path with '
+                f'{self._allowed_extension} suffix to perform this action.'
+            )
 
     def _is_valid_folder_path(self, path: Path):
         if not isinstance(path, Path) or not path.is_dir():
-            raise PathError(
-                'You need to provide valid directory path to perform this action.'
-            )
+            raise PathError
 
     @property
     def allowed_extension(self) -> list:
