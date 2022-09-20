@@ -9,6 +9,7 @@ from typing import Generator
 from pathvalidate import validate_filename
 
 from archive import ArchiveMixin
+from utils import check_path
 
 
 class PathError(Exception):
@@ -37,26 +38,13 @@ class JsonManager(ArchiveMixin, metaclass=Singleton):
     def __init__(self, path: Path = None):
         self.path = path
 
-    def _check_path(func):
-        def wrapper(self, *args, **kwargs):
-
-            bound_args = inspect.signature(func).bind(self, *args, **kwargs)
-            bound_args.apply_defaults()
-            func_args = dict(bound_args.arguments)
-            if func_args['path'] is None:
-                func_args['path'] = self.path
-                return func(*func_args.values())
-            return func(*func_args.values())
-
-        return wrapper
-
-    @_check_path
+    @check_path
     def read(self, path: Path = None) -> dict:
         self._is_valid_json_file_path(path)
         with open(path) as json_file:
             return json.load(json_file)
 
-    @_check_path
+    @check_path
     def write(
         self, data: dict, path: Path = None, update: bool = False
     ) -> JsonManager:
@@ -67,12 +55,12 @@ class JsonManager(ArchiveMixin, metaclass=Singleton):
         with open(path, 'w') as json_file:
             json.dump(data, json_file)
 
-    @_check_path
+    @check_path
     def update_file(self, data: dict, path: Path = None) -> JsonManager:
         self.read(path)
         self.write(data, path, update=True)
 
-    @_check_path
+    @check_path
     def delete_file(self, path: Path = None) -> JsonManager:
         self._is_valid_json_file_path(path)
         try:

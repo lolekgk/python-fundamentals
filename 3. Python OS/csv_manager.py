@@ -1,7 +1,6 @@
 from __future__ import annotations
 
 import csv
-import inspect
 import os
 from pathlib import Path
 from typing import Generator
@@ -9,6 +8,7 @@ from typing import Generator
 from pathvalidate import validate_filename
 
 from archive import ArchiveMixin
+from utils import check_path
 
 
 class PathError(Exception):
@@ -37,20 +37,7 @@ class CSVManager(ArchiveMixin, metaclass=Singleton):
     def __init__(self, path: Path = None):
         self.path = path
 
-    def _check_path(func):
-        def wrapper(self, *args, **kwargs):
-
-            bound_args = inspect.signature(func).bind(self, *args, **kwargs)
-            bound_args.apply_defaults()
-            func_args = dict(bound_args.arguments)
-            if func_args['path'] is None:
-                func_args['path'] = self.path
-                return func(*func_args.values())
-            return func(*func_args.values())
-
-        return wrapper
-
-    @_check_path
+    @check_path
     def read(self, path: Path = None):
         self._is_valid_csv_file_path(path)
         with open(path, newline='', encoding='unicode_escape') as csvfile:
@@ -58,7 +45,7 @@ class CSVManager(ArchiveMixin, metaclass=Singleton):
             for row in reader:
                 print(' '.join(row))
 
-    @_check_path
+    @check_path
     def write(
         self,
         rows: list[dict],
@@ -79,7 +66,7 @@ class CSVManager(ArchiveMixin, metaclass=Singleton):
                 if isinstance(row, dict):
                     writer.writerow(list(row.values()))
 
-    @_check_path
+    @check_path
     def delete_file(self, path: Path = None) -> CSVManager:
         self._is_valid_csv_file_path(path)
         try:
@@ -87,7 +74,7 @@ class CSVManager(ArchiveMixin, metaclass=Singleton):
         except OSError as err:
             print(err)
 
-    @_check_path
+    @check_path
     def update_file(self, data: list[dict], path: Path = None) -> CSVManager:
         self.read(path)
         self.write(rows=data, path=path, update=True)
