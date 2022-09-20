@@ -60,19 +60,16 @@ class CSVManager(ArchiveMixin, metaclass=Singleton):
         self.write(rows=data, path=path, update=True)
 
     def scan_folder(self, path: Path = None, depth: int = -1) -> Generator:
-        """Recursively list files ending with .csv suffix in all folders in given location
-        or up to a certain depth - if provided"""
+        """Recursively list files ending with self._allowed_extension suffix in
+        all folders in given location or up to a certain depth - if provided"""
         self._is_valid_folder_path(path)
         if depth < 0:
-            for csv_path in path.rglob(f"*{CSVManager._allowed_extension}"):
+            for csv_path in path.rglob(f"*{self._allowed_extension}"):
                 yield csv_path
 
         else:
             for child in path.iterdir():
-                if (
-                    child.is_file()
-                    and child.suffix == CSVManager._allowed_extension
-                ):
+                if child.is_file() and child.suffix == self._allowed_extension:
                     yield child
                 if child.is_dir() and depth > 0:
                     yield from self.scan_folder(child, depth - 1)
@@ -82,14 +79,14 @@ class CSVManager(ArchiveMixin, metaclass=Singleton):
             isinstance(path, Path)
             and path.exists()
             and path.is_file()
-            and path.suffix == CSVManager._allowed_extension
+            and path.suffix == self._allowed_extension
         ):
             raise PathError
 
     def _is_valid_csv_suffix(self, path: Path):
         if (
             not isinstance(path, Path)
-            or not path.suffix == CSVManager._allowed_extension
+            or not path.suffix == self._allowed_extension
         ):
             raise PathError
 
