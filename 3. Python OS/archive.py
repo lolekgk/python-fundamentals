@@ -25,3 +25,21 @@ class ArchiveMixin:
         )
     else:
         _archive_format = ArchiveFormat.POSIX.value
+
+    def add_files_to_archive(
+        self,
+        src: Path,
+        dst: Path,
+        depth: int = -1,
+        archive_format=_archive_format,
+    ):
+
+        with tempfile.TemporaryDirectory() as tmpdir:
+            for file in self.scan_folder(src, depth):
+                shutil.copy2(file, tmpdir)
+
+            shutil.make_archive(
+                dst,
+                archive_format,
+                tmpdir,
+            )
