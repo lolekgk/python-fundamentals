@@ -3,15 +3,14 @@ from __future__ import annotations
 import csv
 import os
 from pathlib import Path
-from typing import Generator
 
 from pathvalidate import validate_filename
 
 from archive import ArchiveMixin
-from utils import PathError, Singleton, check_path
+from utils import PathError, ScanFolderMixin, Singleton, check_path
 
 
-class CSVManager(ArchiveMixin, metaclass=Singleton):
+class CSVManager(ArchiveMixin, ScanFolderMixin, metaclass=Singleton):
     _allowed_extension = '.csv'
 
     def __init__(self, path: Path = None):
@@ -58,21 +57,6 @@ class CSVManager(ArchiveMixin, metaclass=Singleton):
     def update_file(self, data: list[dict], path: Path = None) -> CSVManager:
         self.read(path)
         self.write(rows=data, path=path, update=True)
-
-    def scan_folder(self, path: Path = None, depth: int = -1) -> Generator:
-        """Recursively list files ending with self._allowed_extension suffix in
-        all folders in given location or up to a certain depth - if provided"""
-        self._is_valid_folder_path(path)
-        if depth < 0:
-            for csv_path in path.rglob(f"*{self._allowed_extension}"):
-                yield csv_path
-
-        else:
-            for child in path.iterdir():
-                if child.is_file() and child.suffix == self._allowed_extension:
-                    yield child
-                if child.is_dir() and depth > 0:
-                    yield from self.scan_folder(child, depth - 1)
 
     def _is_valid_csv_file_path(self, path: Path):
         if not (

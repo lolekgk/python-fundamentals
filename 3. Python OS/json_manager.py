@@ -3,15 +3,14 @@ from __future__ import annotations
 import json
 import os
 from pathlib import Path
-from typing import Generator
 
 from pathvalidate import validate_filename
 
 from archive import ArchiveMixin
-from utils import PathError, Singleton, check_path
+from utils import PathError, ScanFolderMixin, Singleton, check_path
 
 
-class JsonManager(ArchiveMixin, metaclass=Singleton):
+class JsonManager(ArchiveMixin, ScanFolderMixin, metaclass=Singleton):
     _allowed_extension = '.json'
 
     def __init__(self, path: Path = None):
@@ -46,21 +45,6 @@ class JsonManager(ArchiveMixin, metaclass=Singleton):
             os.remove(path)
         except OSError as er:
             print(er)
-
-    def scan_folder(self, path: Path, depth: int = -1) -> Generator:
-        """Recursively list files ending with .json suffix in all folders in given location
-        or up to a certain depth - if provided"""
-        self._is_valid_folder_path(path)
-        if depth < 0:
-            for tree_path in path.rglob(f'*{self._allowed_extension}'):
-                yield tree_path
-
-        else:
-            for item in path.iterdir():
-                if item.suffix == self._allowed_extension and item.is_file():
-                    yield item
-                if item.is_dir() and depth > 0:
-                    yield from self.scan_folder(item, depth - 1)
 
     def _is_valid_json_file_path(self, path: Path):
         if not (
