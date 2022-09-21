@@ -1,6 +1,7 @@
 import json
-import os
+import zipfile
 from pathlib import Path
+from unittest.mock import patch
 
 import pytest
 from json_manager import JsonManager, PathError, Singleton
@@ -29,6 +30,23 @@ def create_fake_path(fs):
     fs.create_file('/test/test3/xx3.json')
     fs.create_file('/test/test3/test3_1/xx3.json')
     yield fs
+
+
+@pytest.fixture
+def fake_directory(tmp_path):
+    # SetUp fake directory using temporary path
+    root_dir = tmp_path / "sub1"
+    root_dir.mkdir()
+    root_branch1 = root_dir / 'sub1_1'
+    root_branch2 = root_dir / 'sub1_2'
+    root_branch1.mkdir(), root_branch2.mkdir()
+    txt_file = root_dir / 'not_seen.txt'
+    file1 = root_dir / 'test1.json'
+    file2 = root_branch1 / 'test2.json'
+    file3 = root_branch2 / 'test3.json'
+    file1.touch(), file2.touch(), file3.touch(), txt_file.touch()
+    destination = tmp_path / 'archive'
+    yield root_dir, destination
 
 
 @pytest.fixture
@@ -242,26 +260,34 @@ class TestJsonManager:
         with pytest.raises(PathError):
             json_manager._is_valid_json_suffix(invalid_json_path)
 
-    def test_add_tree_to_archive(self, tmp_path, json_manager):
-
-        root_dir = tmp_path / "sub1"
-        root_dir.mkdir()
-        destination = tmp_path / 'archive'
+    # @patch('archive.os_name', 'nt')
+    def test_add_tree_to_archive_creation_with_default_format(
+        self, tmp_path, json_manager, fake_directory
+    ):
+        root_dir, destination = fake_directory
 
         json_manager.add_tree_to_archive(root_dir, destination)
-        if os.name == 'nt':
-            assert (tmp_path / 'archive.7z').exists()
-        else:
-            assert (tmp_path / 'archive.tar.gz').exists()
+        assert (tmp_path / 'archive.tar.gz').exists()
 
-    def test_add_files_to_archive(self, tmp_path, json_manager):
+    def test_add_tree_to_archive_creation_with_custom_format(
+        self, tmp_path, json_manager, fake_directory
+    ):
+        root_dir, destination = fake_directory
+        json_manager.add_tree_to_archive(root_dir, destination, 'zip')
+        archive_path = tmp_path / 'archive.zip'
+        archive_content = zipfile.ZipFile(archive_path).namelist()
+        assert archive_path.exists()
+        assert len(archive_content) == 6
 
-        root_dir = tmp_path / "sub1"
-        root_dir.mkdir()
-        destination = tmp_path / 'archive'
+    def test_add_files_to_archive_with_custom_format(
+        self, tmp_path, json_manager, fake_directory
+    ):
+        root_dir, destination = fake_directory
+        json_manager.add_files_to_archive(
+            root_dir, destination, archive_format='zip'
+        )
+        archive_path = tmp_path / 'archive.zip'
+        archive_content = zipfile.ZipFile(archive_path).namelist()
 
-        json_manager.add_files_to_archive(root_dir, destination)
-        if os.name == 'nt':
-            assert (tmp_path / 'archive.7z').exists()
-        else:
-            assert (tmp_path / 'archive.tar.gz').exists()
+        assert archive_path.exists()
+        assert archive_content == ['test1.json', 'test2.json', 'test3.json']

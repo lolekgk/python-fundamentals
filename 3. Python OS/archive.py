@@ -1,10 +1,10 @@
-import os
 import shutil
 import tempfile
 from enum import Enum
+from os import name as os_name
 from pathlib import Path
 
-from py7zr import pack_7zarchive
+from py7zr import pack_7zarchive, unpack_7zarchive
 
 
 class ArchiveFormat(Enum):
@@ -13,7 +13,7 @@ class ArchiveFormat(Enum):
 
 
 class ArchiveMixin:
-    if os.name == 'nt':
+    if os_name == 'nt':
         _archive_format = ArchiveFormat.WINDOWS.value
         shutil.register_archive_format(
             ArchiveFormat.WINDOWS.value,
