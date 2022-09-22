@@ -17,14 +17,4 @@
 
 ## Optional targets
 
-- [ ] Brak
-
-## Useful links
-
-- A little bit about `in` https://www.askpython.com/python/examples/in-and-not-in-operators-in-python
-
-## Pice of code for a better start
-
-```python
-def is_in_list(list_, element_to_find):...
-```
+- [ ] None
