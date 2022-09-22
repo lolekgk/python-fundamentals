@@ -19,15 +19,3 @@
 ## Optional targets
 
 - [ ] Function will not include weekend days in the calculation
-
-## Useful links
-
-- Datetime module - https://docs.python.org/3/library/datetime.html
-
-## Pice of code for a better start
-
-```python
-# - one workday equals 8 hrs
-
-def estimate_date(start_date, estimated_hours):...
-```
