@@ -3,6 +3,7 @@ import tempfile
 from enum import Enum
 from os import name as os_name
 from pathlib import Path
+from typing import Callable
 
 from py7zr import pack_7zarchive, unpack_7zarchive
 
@@ -17,27 +18,29 @@ class ArchiveFormat(Enum):
 
 
 class ArchiveMixin:
-    @staticmethod
-    def _get_archive_format():
+    def _get_archive_format(self):
 
-        archive_format = ArchiveFormat.POSIX.value
+        self.archive_format = ArchiveFormat.POSIX.value
         if get_os() == 'nt':
-            archive_format = ArchiveFormat.WINDOWS.value
+            self.archive_format = ArchiveFormat.WINDOWS.value
             shutil.register_archive_format(
                 '7zip',
                 pack_7zarchive,
                 description='7zip archive',
             )
             shutil.register_unpack_format('7zip', ['.7z'], unpack_7zarchive)
-        return archive_format
+        return self.archive_format
 
     def add_files_to_archive(
         self,
         src: Path,
         dst: Path,
         depth: int = -1,
-        archive_format: str = _get_archive_format(),
+        archive_format: str = _get_archive_format,
     ):
+        if isinstance(archive_format, Callable):
+            archive_format = archive_format(self)
+
         with tempfile.TemporaryDirectory() as tmpdir:
             for file in self.scan_folder(src, depth):
                 shutil.copy2(file, tmpdir)
@@ -52,8 +55,12 @@ class ArchiveMixin:
         self,
         src: Path,
         dst: Path,
-        archive_format: str = _get_archive_format(),
+        archive_format: str = _get_archive_format,
     ):
+
+        if isinstance(archive_format, Callable):
+            archive_format = archive_format(self)
+
         with tempfile.TemporaryDirectory() as tmpdir:
             shutil.copytree(src, tmpdir, dirs_exist_ok=True)
             shutil.make_archive(dst, archive_format, tmpdir)
