@@ -1,5 +1,6 @@
 import shutil
 import tempfile
+from ast import Call
 from enum import Enum
 from os import name as os_name
 from pathlib import Path
@@ -38,7 +39,7 @@ class ArchiveMixin:
         src: Path,
         dst: Path,
         depth: int = -1,
-        archive_format: str = _set_archive_format,
+        archive_format: str | Callable = _set_archive_format,
     ):
         if isinstance(archive_format, Callable):
             archive_format = archive_format(self)
@@ -57,7 +58,7 @@ class ArchiveMixin:
         self,
         src: Path,
         dst: Path,
-        archive_format: str = _set_archive_format,
+        archive_format: str | Callable = _set_archive_format,
     ):
 
         if isinstance(archive_format, Callable):
