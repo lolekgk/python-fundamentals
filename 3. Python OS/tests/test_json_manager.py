@@ -50,6 +50,11 @@ def fake_directory(tmp_path):
 
 
 @pytest.fixture
+def name_mock(mocker):
+    return mocker.patch("archive.get_os", return_value="nt")
+
+
+@pytest.fixture
 def valid_json_path():
     path = Path('/test/test.json')
     yield path
@@ -260,13 +265,16 @@ class TestJsonManager:
         with pytest.raises(PathError):
             json_manager._is_valid_json_suffix(invalid_json_path)
 
-    # @patch('archive.os_name', 'nt')
+    # @patch('archive.get_os', 'nt')
     def test_add_tree_to_archive_creation_with_default_format(
-        self, tmp_path, json_manager, fake_directory
+        self, tmp_path, json_manager, fake_directory, name_mock
     ):
         root_dir, destination = fake_directory
+        import archive
 
         json_manager.add_tree_to_archive(root_dir, destination)
+        assert archive.get_os() == 'nt'
+        # assert archive.os_name == 'nt'
         assert (tmp_path / 'archive.tar.gz').exists()
 
     def test_add_tree_to_archive_creation_with_custom_format(
