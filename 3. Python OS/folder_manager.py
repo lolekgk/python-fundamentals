@@ -1,37 +1,25 @@
 from __future__ import annotations
 
-import inspect
 import os
 import shutil
 from pathlib import Path
+
+from utils import check_path
 
 
 class FolderManager:
     def __init__(self, path: Path | None = None):
         self.path = path
 
-    def _check_path(func):
-        def wrapper(self, *args, **kwargs):
-
-            bound_args = inspect.signature(func).bind(self, *args, **kwargs)
-            bound_args.apply_defaults()
-            func_args = dict(bound_args.arguments)
-            if func_args['path'] is None:
-                func_args['path'] = self.path
-                return func(*func_args.values())
-            return func(*func_args.values())
-
-        return wrapper
-
-    @_check_path
+    @check_path
     def create_folder(self, path: Path = None):
         os.makedirs(path, exist_ok=True)
 
-    @_check_path
+    @check_path
     def list_content(self, path: Path = None) -> list:
         return os.listdir(path)
 
-    @_check_path
+    @check_path
     def delete_folder(
         self, path: Path = None, ignore_dir_content: bool = False
     ):

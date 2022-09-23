@@ -1,4 +1,5 @@
 import csv
+import zipfile
 from pathlib import Path
 
 import pytest
@@ -28,6 +29,23 @@ def create_fake_path(fs):
     fs.create_file('/test/test3/xx3.csv')
     fs.create_file('/test/test3/test3_1/xx3.csv')
     yield fs
+
+
+@pytest.fixture
+def fake_directory(tmp_path):
+    # SetUp fake directory using temporary path
+    root_dir = tmp_path / "sub1"
+    root_dir.mkdir()
+    root_branch1 = root_dir / 'sub1_1'
+    root_branch2 = root_dir / 'sub1_2'
+    root_branch1.mkdir(), root_branch2.mkdir()
+    txt_file = root_dir / 'not_seen.txt'
+    file1 = root_dir / 'test1.csv'
+    file2 = root_branch1 / 'test2.csv'
+    file3 = root_branch2 / 'test3.csv'
+    file1.touch(), file2.touch(), file3.touch(), txt_file.touch()
+    destination = tmp_path / 'archive'
+    yield root_dir, destination
 
 
 @pytest.fixture
@@ -259,3 +277,44 @@ class TestCSVManager:
     ):
         result = csv_manager.scan_folder(main_directory_path, 0)
         assert list(result) == [Path('/test/test.csv')]
+
+    def test_add_tree_to_archive_creation_with_default_windows_format(
+        self, monkeypatch, tmp_path, csv_manager, fake_directory
+    ):
+
+        root_dir, destination = fake_directory
+        monkeypatch.setattr('archive.get_os', lambda: 'nt')
+        csv_manager.add_tree_to_archive(root_dir, destination)
+        assert (tmp_path / 'archive.7z').exists()
+
+    def test_add_tree_to_archive_creation_with_default_posix_format(
+        self, monkeypatch, tmp_path, csv_manager, fake_directory
+    ):
+
+        root_dir, destination = fake_directory
+        monkeypatch.setattr('archive.get_os', lambda: 'posix')
+        csv_manager.add_tree_to_archive(root_dir, destination)
+        assert (tmp_path / 'archive.tar.gz').exists()
+
+    def test_add_tree_to_archive_creation_with_custom_format(
+        self, tmp_path, csv_manager, fake_directory
+    ):
+        root_dir, destination = fake_directory
+        csv_manager.add_tree_to_archive(root_dir, destination, 'zip')
+        archive_path = tmp_path / 'archive.zip'
+        archive_content = zipfile.ZipFile(archive_path).namelist()
+        assert archive_path.exists()
+        assert len(archive_content) == 6
+
+    def test_add_files_to_archive_with_custom_format(
+        self, tmp_path, csv_manager, fake_directory
+    ):
+        root_dir, destination = fake_directory
+        csv_manager.add_files_to_archive(
+            root_dir, destination, archive_format='zip'
+        )
+        archive_path = tmp_path / 'archive.zip'
+        archive_content = zipfile.ZipFile(archive_path).namelist()
+
+        assert archive_path.exists()
+        assert archive_content == ['test2.csv', 'test3.csv', 'test1.csv']
